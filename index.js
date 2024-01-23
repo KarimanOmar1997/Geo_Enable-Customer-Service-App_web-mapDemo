@@ -572,7 +572,7 @@ require([
  
  const searchWidget = new Search({
  view: view,
- allPlaceholder: "Site id Or Phone number",
+ allPlaceholder: "Site id ",
  includeDefaultSources: false,
  sources: [
    {
@@ -584,15 +584,15 @@ require([
      name: "Sites",
      placeholder: "example: BAG0400"
    },
-   {
-     layer: map.layers.getItemAt(6) ,
-     searchFields: ["phone_number"],
-     displayField: "phone_number",
-     exactMatch: false,
-     // outFields: ["*"],
-     name: "CCTicketsFC",
-     placeholder: "example: 010123456789"
-   },
+  //  {
+  //    layer: map.layers.getItemAt(6) ,
+  //    searchFields: ["phone_number"],
+  //    displayField: "phone_number",
+  //    exactMatch: false,
+  //    // outFields: ["*"],
+  //    name: "CCTicketsFC",
+  //    placeholder: "example: 010123456789"
+  //  },
    {
      name: "ArcGIS World Geocoding Service",
      placeholder: "example: Nuuk, GRL",
@@ -2269,6 +2269,278 @@ require([
          fieldName: "UNIT_HEAD_ID",
          label: "UNIT_HEAD_ID:"
        }
+       ,
+       {
+         type: "field",
+         fieldName: "UNIT_HEAD",
+         label: "UNIT_HEAD:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "UNIT_HEAD_EMAIL",
+         label: "UNIT_HEAD_EMAIL:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "UNIT_HEAD_MOBILE_NUMBER",
+         label: "UNIT_HEAD_MOBILE_NUMBER:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "SALES_DISTRIBUTOR_ID",
+         label: "SALES_DISTRIBUTOR_ID:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "SALES_DISTRIBUTOR",
+         label: "SALES_DISTRIBUTOR:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "SALES_DISTRIBUTOR_EMAIL",
+         label: "SALES_DISTRIBUTOR_EMAIL:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "SALES_DISTRIBUTOR_MOBILE_NUMBER",
+         label: "SALES_DISTRIBUTOR_MOBILE_NUMBER:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "REGIONAL_UNIT_HEAD_ID",
+         label: "REGIONAL_UNIT_HEAD_ID:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "REGIONAL_UNIT_HEAD",
+         label: "REGIONAL_UNIT_HEAD:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "POS_Class",
+         label: "POS_Class:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Etop_up_Balance_IQD",
+         label: "Etop_up_Balance_IQD:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Etop_up_User_Transaction_to_Sub",
+         label: "Etop-up User Transaction to Subscriber (Less than 10K):"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Recharged_Amount_to_Subscriber_",
+         label: "Recharged Amount to Subscriber ( Less than 10K):"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Etop_up_User_Transaction_to_S_1",
+         label: "Etop-up User Transaction to Subscriber (More than 10K):"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Recharged_Amount_to_Subscriber1",
+         label: "	Recharged Amount to Subscriber ( More than 10K):"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "MGM_User",
+         label: "	MGM_User:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "MGM___Haifz_Transaction_Count_w",
+         label: "	MGM - Haifz Transaction Count with Commission:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "MGM___Haifz_Commission_Amount",
+         label: "	MGM - Haifz Commission Amount:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Bundle_Activation_Count",
+         label: "	Bundle Activation Count:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Bundle_Activation_Amount",
+         label: "Bundle Activation Amount:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Hala_Line",
+         label: "Hala Line:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Yooz_Acitvation",
+         label: "Yooz Acitvation:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Gross_Add__prepaid",
+         label: "Gross Add prepaid:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "prepaid_target",
+         label: "prepaid target:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Acheivement__",
+         label: "Acheivement %:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Gross_Add__FRC_Count___5K__Excl",
+         label: "Gross Add -FRC Count >=5K (Excluding 4G, SC#2):"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "PREPAID_QGA_WITH_CONTRACT",
+         label: "PREPAID QGA WITH CONTRACT:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Healthy__Check3_",
+         label: "Healthy (Check3):"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Consumption_15K_within_90_Days_",
+         label: "Consumption 15K within 90 Days (Check4):"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Router",
+         label: "Router:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "MIFI_Activiation",
+         label: "MIFI Activiation:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Data_Line__4G__GA_Count",
+         label: "Data Line (4G) GA Count:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "F4G_target",
+         label: "4G target:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Acheivement__1",
+         label: "	Acheivement %1:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "Data_Line__4G__QGA_Count",
+         label: "	Data Line (4G) QGA Count:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "POS_Airtime_Commission_Amount__",
+         label: "	POS Airtime Commission Amount - Contract:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "POS_Airtime_Commission_Amount_1",
+         label: "	POS Airtime Commission Amount - FRC:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "TOTAL_GA",
+         label: "	TOTAL_GA:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "TOTAL_TARGET",
+         label: "	TOTAL_TARGET:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "x",
+         label: "	x:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "y",
+         label: "y:"
+       }
+     
+       ,
+       {
+         type: "field",
+         fieldName: "coverage_type",
+         label: "coverage type:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "network_strength",
+         label: "network strength:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "sales_amout",
+         label: "sales amout:"
+       }
+       ,
+       {
+         type: "field",
+         fieldName: "productName",
+         label: "product Name:"
+       }
+     
      ]
    },
    container: document.getElementById("tableDiv-POS")
