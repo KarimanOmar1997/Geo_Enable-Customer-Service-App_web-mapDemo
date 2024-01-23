@@ -492,7 +492,7 @@ require([
           //  console.log(" =========================================================================== ");
           //  console.log(" layerTitle::", graphic.layer.title);
           //  console.log(" block.heading::", graphic.layer.title);
-           if (block.heading === layerTitle || block.heading === "Network Area" || block.heading ==="RFI Product") {
+           if (block.heading === layerTitle || block.heading === "Network Area" ) {
              panel.appendChild(block);
              const featureChild = new Feature({
                container: document.createElement("div"),
