@@ -1,236 +1,188 @@
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
-    <title>FeatureTable with a map | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
+<!--
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.28/"></script>
+To run this demo, you need to replace 'YOUR_API_KEY' with an API key from the ArcGIS Developers dashboard.
 
-    <style>
-      html,
-      body {
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-      }
+Sign up for a free account and get an API key.
 
-      #viewDiv {
-        height: 50%;
-        width: 100%;
-      }
+https://developers.arcgis.com/documentation/mapping-apis-and-services/get-started/
 
-      .container {
-        height: 50%;
-        width: 100%;
-      }
-    </style>
-    <script>
-      require([
-        "esri/WebMap",
-        "esri/views/MapView",
-        "esri/core/reactiveUtils",
-        "esri/layers/FeatureLayer",
-        "esri/widgets/FeatureTable"
-      ], (WebMap, MapView, reactiveUtils, FeatureLayer, FeatureTable) => {
-        let selectionIdCount = 0; // The filtered selection id count
-        let candidate; // The graphic accessed via the view.click event
+-->
 
-        let webmapId  = "f4f6642aa5514d83aae6de0ebb65057e";
-        if (window.location.href.indexOf("?id=") > 0) {
-          webmapId = window.location.href.split("?id=")[1];
-        }
+<html>
+<head>
+  <meta name="description" content="Style a feature layer">
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>ArcGIS Maps SDK for JavaScript Tutorials: Style a feature layer</title>
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.28/"></script>
 
-        const webmap = new WebMap({
-          portalItem: {
-            id: webmapId
-          }
-        });
+  <script>
 
-        const view = new MapView({
-          container: "viewDiv",
-          map: webmap,
+    require([
+      "esri/config",
+      "esri/Map",
+      "esri/views/MapView",
 
-        });
+      "esri/layers/FeatureLayer"
 
-      //   view.when(() => {
-      //     const featureLayer = webmap.layers.getItemAt(8); // Grabs the first layer in the map
-      //     featureLayer.title = "USFS Recreational areas";
+    ], function(esriConfig, Map, MapView, FeatureLayer ) {
 
-      //     // Create the feature table
-      //     const featureTable = new FeatureTable({
-      //       view: view, // Required for feature highlight to work
-      //       layer: featureLayer,
-      //       visibleElements: {
-      //         // Autocast to VisibleElements
-      //         menuItems: {
-      //           clearSelection: true,
-      //           refreshData: true,
-      //           toggleColumns: true,
-      //           selectedRecordsShowAllToggle: true,
-      //           selectedRecordsShowSelectedToggle: true,
-      //           zoomToSelection: true
-      //         }
-      //       },
-      //       tableTemplate: {
-      //         // Autocast to TableTemplate
-      //         columnTemplates: [
-      //           // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-      //           {
-      //    // Autocast to FieldColumnTemplate.
-      //    type: "field",
-      //    fieldName: "site_id",
-      //    label: "Site ID",
-      //    // direction: "des"
-      //  },
-      //  {
-      //    type: "field",
-      //    fieldName: "site_name",
-      //    label: "Site Name"
-      //  },
-      //  // {
-      //  //   type: "field",
-      //  //   fieldName: "latitude",
-      //  //   label: "Latitude"
-      //  // },
-      //  // {
-      //  //   type: "field",
-      //  //   fieldName: "longitude",
-      //  //   label: "Longitude"
-      //  // },
-      //  {
-      //    type: "field",
-      //    fieldName: "total_no_customer",
-      //    label: "total_no_customer"
-      //  }
-      //  ,
-      //  {
-      //    type: "field",
-      //    fieldName: "site_type",
-      //    label: "Site type"
-      //  }
-      //  ,
-      //  {
-      //    type: "field",
-      //    fieldName: "maintenance",
-      //    label: "maintenance"
-      //  }
-      //  ,
-      //  {
-      //    type: "field",
-      //    fieldName: "outages",
-      //    label: "outages"
-      //  }
-      //  ,
-      //  {
-      //    type: "field",
-      //    fieldName: "gov",
-      //    label: "gov"
-      //  }
-      //  ,
-      //  {
-      //    type: "field",
-      //    fieldName: "MaintenanceSiteOperation",
-      //    label: "MaintenanceSiteOperation"
-      //  }
-      //  ,
-      //  {
-      //    type: "field",
-      //    fieldName: "OutagesData",
-      //    label: "OutagesData"
-      //  }
-      //  ,
-      //  {
-      //    type: "field",
-      //    fieldName: "Sites_Buffer3",
-      //    label: "Sites_Buffer3"
-      //  }
-      //  ,
-      //  {
-      //    type: "field",
-      //    fieldName: "CCTicketsFC",
-      //    label: "CCTicketsFC"
-      //  }
-      //         ]
-      //       },
-      //       container: document.getElementById("tableDiv")
-      //     });
+      esriConfig.apiKey = "AAPK8439fc9a325c4593a3234a4fbafe73caXK2STpUubI24-8zi9egsX2fCBrOdoOUY5qDXEAIHWamfxipss0ffj3zCLo7amIE6";
 
-      //     // Listen for when the view is stationary.
-      //     // If true, set the table to display only the attributes
-      //     // for the features falling within this extent.
-
-      //     reactiveUtils.when(
-      //       () => view.stationary,
-      //       () => {
-      //         // Filter out and show only the visible features in the feature table.
-      //         featureTable.filterGeometry = view.extent;
-      //       },
-      //       {
-      //         initial: true
-      //       }
-      //     );
-
-      //     // Listen for the view's click event and access the associated graphic.
-
-      //     view.on("immediate-click", async (event) => {
-      //       const response = await view.hitTest(event);
-
-      //       candidate = response.results.find((result) => {
-      //         return result.graphic && result.graphic.layer && result.graphic.layer === featureLayer;
-      //       });
-
-      //       // Add the graphic's ObjectId into the collection of highlightIds.
-      //       // Check that the featureTable.highlightIds collection
-      //       // does not include an already highlighted feature.
-      //       if (candidate) {
-      //         const objectId = candidate.graphic.getObjectId();
-
-      //         if (featureTable.highlightIds.includes(objectId)) {
-      //           // Remove feature from current selection if feature
-      //           // is already added to highlightIds collection
-      //           featureTable.highlightIds.remove(objectId);
-      //         } else {
-      //           // Add this feature to the featureTable highlightIds collection
-      //           featureTable.highlightIds.add(objectId);
-      //         }
-      //       }
-      //     });
-
-      //     // Watch the featureTable's highlightIds.length property,
-      //     // and get the count of highlighted features within
-      //     // the table.
-
-      //     reactiveUtils.watch(
-      //       () => featureTable.highlightIds.length,
-      //       (highlightIdsCount) => {
-      //         // Iterate through the filters within the table.
-      //         // If the active filter is "Show selection",
-      //         // changes made to highlightIds (adding/removing)
-      //         // are reflected.
-
-      //         featureTable.viewModel.activeFilters.forEach((filter) => {
-      //           if (filter.type === "selection") {
-      //             selectionIdCount = filter.objectIds.length; // the filtered selection's id count
-      //             // Check that the filter selection count is equal to the
-      //             // highlightIds collection count. If not, update filter selection.
-      //             if (selectionIdCount !== highlightIdsCount) {
-      //               featureTable.filterBySelection();
-      //             }
-      //           }
-      //         });
-      //       }
-      //     );
-      //   });
+      const map = new Map({
+        basemap: "arcgis/topographic" // basemap styles service
       });
-    </script>
-  </head>
 
-  <body>
-    <div id="viewDiv"></div>
-    <div class="container">
-      <div id="tableDiv"></div>
-    </div>
-  </body>
+      const view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-118.80543,34.02700], //Longitude, latitude
+        zoom: 13
+      });
+
+      const trailheadsRenderer = {
+        "type": "simple",
+        "symbol": {
+          "type": "picture-marker",
+          "url": "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
+          "width": "18px",
+          "height": "18px"
+        }
+      }
+
+      const trailheadsLabels = {
+        symbol: {
+          type: "text",
+          color: "#FFFFFF",
+          haloColor: "#5E8D74",
+          haloSize: "2px",
+          font: {
+            size: "12px",
+            family: "Noto Sans",
+            style: "italic",
+            weight: "normal"
+          }
+        },
+
+        labelPlacement: "above-center",
+        labelExpressionInfo: {
+          expression: "$feature.TRL_NAME"
+        }
+      };
+
+      // Create the layer and set the renderer
+      const trailheads = new FeatureLayer({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0",
+        renderer: trailheadsRenderer,
+        labelingInfo: [trailheadsLabels]
+      });
+
+      map.add(trailheads);
+
+      // Define a unique value renderer and symbols
+      const trailsRenderer = {
+        type: "simple",
+        symbol: {
+          color: "red",
+          type: "simple-line",
+          style: "solid"
+        },
+
+        visualVariables: [
+          {
+            type: "size",
+            field: "ELEV_GAIN",
+            minDataValue: 0,
+            maxDataValue: 2300,
+            minSize: "3px",
+            maxSize: "7px"
+          }
+        ]
+      };
+
+      // Create the layer and set the renderer
+      const trails = new FeatureLayer({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+        renderer: trailsRenderer,
+        opacity: 0.75
+      });
+
+      // Add the layer
+      map.add(trails,0);
+
+      // Add bikes only trails
+      const bikeTrailsRenderer = {
+        type: "simple",
+        symbol: {
+          type: "simple-line",
+          style: "short-dot",
+          color: "#FF91FF",
+          width: "1px"
+        }
+      };
+
+      const bikeTrails = new FeatureLayer({
+        url:
+          "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+        renderer: bikeTrailsRenderer,
+        definitionExpression: "USE_BIKE = 'YES'"
+      });
+
+      map.add(bikeTrails, 1);
+
+      // Add parks with a class breaks renderer and unique symbols
+      function createFillSymbol(value, color) {
+        return {
+          "value": value,
+          "symbol": {
+            "color": color,
+            "type": "simple-fill",
+            "style": "solid",
+            "outline": {
+              "style": "none"
+            }
+          },
+          "label": value
+        };
+      }
+
+      const openSpacesRenderer = {
+        type: "unique-value",
+        field: "TYPE",
+        uniqueValueInfos: [
+          createFillSymbol("Natural Areas", "#9E559C"),
+          createFillSymbol("Regional Open Space", "#A7C636"),
+          createFillSymbol("Local Park", "#149ECE"),
+          createFillSymbol("Regional Recreation Park", "#ED5151")
+        ]
+      };
+
+      // Create the layer and set the renderer
+      const openspaces = new FeatureLayer({
+        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0",
+        renderer: openSpacesRenderer,
+        opacity: 0.2
+      });
+
+      // Add the layer
+      map.add(openspaces,0);
+
+    });
+  </script>
+
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
 </html>
