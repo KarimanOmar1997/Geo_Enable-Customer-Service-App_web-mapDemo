@@ -103,9 +103,9 @@ require([
  console.log("to get 6 :",map.layers.getItemAt(6).title);
  console.log("to get 7 :",map.layers.getItemAt(7).title);
  console.log("to get 8 :",map.layers.getItemAt(8).title);
- console.log("to get 9 :",map.layers.getItemAt(9).title);
- console.log("to get 10 :",map.layers.getItemAt(10).title);
- map.layers.getItemAt(8).popupTemplate= {
+//  console.log("to get 9 :",map.layers.getItemAt(9).title);
+//  console.log("to get 10 :",map.layers.getItemAt(10).title);
+ map.layers.getItemAt(7).popupTemplate= {
    title: "{site_id}",
    outFields: ["*"],
    returnGeometry: true,
@@ -185,7 +185,7 @@ require([
      },
    ]
  }
- map.layers.getItemAt(7).popupTemplate= {
+ map.layers.getItemAt(6).popupTemplate= {
    title: "{phone_number}",
    outFields: ["*"],
    returnGeometry: true,
@@ -360,7 +360,103 @@ require([
      },
    ]
  }
- 
+ map.layers.getItemAt(5).popupTemplate= {
+  title: "{site_name}",
+  outFields: ["*"],
+  returnGeometry: true,
+  fieldInfos: [
+    {
+      fieldName: "site_id",
+      label: "Site ID:"
+    },
+    {
+      fieldName: "site_name",
+      label: "site name:"
+    },
+    {
+      fieldName: "latitude",
+      label: "latitude:"
+    },
+    {
+      fieldName: "longitude",
+      label: "latitude:"
+    },
+    {
+      fieldName: "covergae_area_id",
+      label: "covergae area id:"
+    },
+    {
+      fieldName: "coverage_status",
+      label: "coverage status:"
+    },
+    {
+      fieldName: "coverage_status_date_time",
+      label: "coverage status date time:"
+    },
+    {
+      fieldName: "coverage_location",
+      label: "coverage location:"
+    },
+    {
+      fieldName: "cgi",
+      label: "cgi:"
+    },
+    {
+      fieldName: "outage",
+      label: "outage:"
+    },
+    {
+      fieldName: "maintentance",
+      label: "maintentance:"
+    },
+    {
+      fieldName: "gov",
+      label: "gov:"
+    },
+    {
+      fieldName: "network_type",
+      label: "network type:"
+    },
+  ],
+  content: [
+    // Add FieldContent to popup template.
+    {
+      type: "fields"
+    },
+    // Create RelationshipContent with the relationship between
+    // the units and fires.
+    {
+      type: "relationship",
+      // The numeric ID value for the defined relationship on the service.
+      // This can be found on the service.
+      relationshipId: 2,
+      description: "",
+      // Display two related fire features in the list of related features.
+      displayCount: 1,
+      title: "Sites Data",
+      // Order the related features by the 'GIS_ACRES' in descending order.
+      orderByFields: {
+        field: "site_id",
+        order: "desc"
+      }
+    },
+    // // Create RelationshipContent with the relationship between
+    // // the units and wildfire protection facility statistics table.
+    {
+      type: "relationship",
+      relationshipId: 6,
+      description: "",
+      // Display only the one unit
+      displayCount: 1,
+      title: "CCTicketsFC Data",
+      // Order list of related records by the 'NAME' field in ascending order.
+      orderByFields: {
+        field: "siteid",
+        order: "asc"
+      }
+    },
+  ]
+}
  // On view click, first remove all the previously added features (if any).
  reactiveUtils.on(
    () => view,
@@ -469,7 +565,7 @@ require([
  includeDefaultSources: false,
  sources: [
    {
-     layer: map.layers.getItemAt(8) ,
+     layer: map.layers.getItemAt(7) ,
      searchFields: ["site_id"],
      displayField: "site_id",
      exactMatch: false,
@@ -478,7 +574,7 @@ require([
      placeholder: "example: BAG0400"
    },
    {
-     layer: map.layers.getItemAt(7) ,
+     layer: map.layers.getItemAt(6) ,
      searchFields: ["phone_number"],
      displayField: "phone_number",
      exactMatch: false,
@@ -636,7 +732,7 @@ require([
  
  typeSelect.addEventListener("change", async() => {
    const value = typeSelect.value;
-     const layer = map.layers.getItemAt(7);
+     const layer = map.layers.getItemAt(6);
      await layer.load();
      // Create an array of layerViews to be able to highlight selected features.
      if (layer.type === "feature") {
@@ -1057,7 +1153,7 @@ require([
  
  // ========================================charts==============================================
  
- const layer = map.layers.getItemAt(7);
+ const layer = map.layers.getItemAt(6);
  // console.log(layer);
  await layer.load();
  let layerView = await view.whenLayerView(layer);
@@ -1436,8 +1532,8 @@ require([
  
  // ===========================================================tables========================================
  
- const featureLayerTwors = map.layers.getItemAt(8); // Grabs the first layer in the map
- const featureLayerHPSMTickets = map.layers.getItemAt(7); // Grabs the first layer in the map
+ const featureLayerTwors = map.layers.getItemAt(7); // Grabs the first layer in the map
+ const featureLayerHPSMTickets = map.layers.getItemAt(6); // Grabs the first layer in the map
  const featureLayerMaintenanceSiteOperation = new FeatureLayer({
  url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/4"
  });
@@ -2010,17 +2106,17 @@ require([
         result.graphic.layer === featureLayerHPSMTickets 
   
      }
-     else if (result.graphic.layer === map.layers.getItemAt(6)){
+     else if (result.graphic.layer === map.layers.getItemAt(5)){
       return result.graphic &&
       result.graphic.layer &&
-        result.graphic.layer === map.layers.getItemAt(6) 
+        result.graphic.layer === map.layers.getItemAt(5) 
   
      }
 
-     else if (result.graphic.layer === map.layers.getItemAt(4)){
+     else if (result.graphic.layer === map.layers.getItemAt(3)){
       return result.graphic &&
       result.graphic.layer &&
-        result.graphic.layer === map.layers.getItemAt(4) 
+        result.graphic.layer === map.layers.getItemAt(3) 
   
      }
      else if (result.graphic.layer === map.layers.getItemAt(2)){
