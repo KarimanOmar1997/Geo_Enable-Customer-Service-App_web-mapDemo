@@ -105,6 +105,39 @@ require([
  console.log("to get 8 :",map.layers.getItemAt(8).title);
  console.log("to get 9 :",map.layers.getItemAt(9).title);
  console.log("to get 10 :",map.layers.getItemAt(10).title);
+ console.log(map.layers.getItemAt(6));
+
+ function createSymbol2(color) {
+  return {
+    type: "simple-fill",
+    color: color,
+    outline: {
+      width: 0.3,
+      color: [255, 255, 255, 0.2]
+    }
+  };
+}
+
+ const colors = [ "red", "green" ];
+ const predominanceArcade = document.getElementById("predominance").text;
+ const renderer = {
+   type: "unique-value",
+  //  field: "outage",
+  valueExpression: predominanceArcade ,
+   uniqueValueInfos: [
+     {
+       value: "yes",
+       symbol: createSymbol2(colors[0])
+     }, {
+       value: "no",
+       symbol: createSymbol2(colors[1])
+     }
+   ]
+ };
+//  map.layers.getItemAt(6).renderer= renderer;
+
+//  map.layers.getItemAt(6).blendMode = "multiply";
+
  map.layers.getItemAt(8).popupTemplate= {
    title: "{site_id}",
    outFields: ["*"],
@@ -180,6 +213,103 @@ require([
        // Order list of related records by the 'NAME' field in ascending order.
        orderByFields: {
          field: "site_id",
+         order: "asc"
+       }
+     },
+   ]
+ }
+ map.layers.getItemAt(6).popupTemplate= {
+   title: "{site_name}",
+   outFields: ["*"],
+   returnGeometry: true,
+   fieldInfos: [
+     {
+       fieldName: "site_id",
+       label: "Site ID:"
+     },
+     {
+       fieldName: "site_name",
+       label: "site name:"
+     },
+     {
+       fieldName: "latitude",
+       label: "latitude:"
+     },
+     {
+       fieldName: "longitude",
+       label: "latitude:"
+     },
+     {
+       fieldName: "covergae_area_id",
+       label: "covergae area id:"
+     },
+     {
+       fieldName: "coverage_status",
+       label: "coverage status:"
+     },
+     {
+       fieldName: "coverage_status_date_time",
+       label: "coverage status date time:"
+     },
+     {
+       fieldName: "coverage_location",
+       label: "coverage location:"
+     },
+     {
+       fieldName: "cgi",
+       label: "cgi:"
+     },
+     {
+       fieldName: "outage",
+       label: "outage:"
+     },
+     {
+       fieldName: "maintentance",
+       label: "maintentance:"
+     },
+     {
+       fieldName: "gov",
+       label: "gov:"
+     },
+     {
+       fieldName: "network_type",
+       label: "network type:"
+     },
+   ],
+   content: [
+     // Add FieldContent to popup template.
+     {
+       type: "fields"
+     },
+     // Create RelationshipContent with the relationship between
+     // the units and fires.
+     {
+       type: "relationship",
+       // The numeric ID value for the defined relationship on the service.
+       // This can be found on the service.
+       relationshipId: 2,
+       description: "",
+       // Display two related fire features in the list of related features.
+       displayCount: 1,
+       title: "Sites Data",
+       // Order the related features by the 'GIS_ACRES' in descending order.
+       orderByFields: {
+         field: "site_id",
+         order: "desc"
+       }
+     },
+     // // Create RelationshipContent with the relationship between
+     // // the units and wildfire protection facility statistics table.
+     {
+       type: "relationship",
+       relationshipId: 6,
+       description: "",
+       // Display only the one unit
+       displayCount: 1,
+       title: "CCTicketsFC Data",
+       // Order list of related records by the 'NAME' field in ascending order.
+       orderByFields: {
+         field: "siteid",
          order: "asc"
        }
      },
@@ -360,6 +490,8 @@ require([
      },
    ]
  }
+
+ 
  
  // On view click, first remove all the previously added features (if any).
  reactiveUtils.on(
@@ -1420,18 +1552,18 @@ require([
  }
  
  
- function createSymbol(color) {
-   return {
-     type: "simple-marker",
-     color: color,
-     size: "5px",
-     outline: null,
-     outline: {
-       color: "rgba(153, 31, 23, 0.3)",
-       width: 0.3
-     }
-   };
- }
+//  function createSymbol(color) {
+//    return {
+//      type: "simple-marker",
+//      color: color,
+//      size: "5px",
+//      outline: null,
+//      outline: {
+//        color: "rgba(153, 31, 23, 0.3)",
+//        width: 0.3
+//      }
+//    };
+//  }
  
  
  // ===========================================================tables========================================
@@ -2196,6 +2328,7 @@ require([
    }
  );
  
+
  
  })();
  });
