@@ -245,6 +245,26 @@
           </div>
           <div class="d-flex mt-3">
 
+            <div class="col-6 p-3 ">
+              <div class="w-100 p-3 card text-center">
+                <div class="card-body">
+                  <h5 class="card-title">Total RFI</h5>
+                  <p id="totalRFI" class="card-text"></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 p-3 ">
+              <div class="w-100 p-3 card text-center">
+                <div class="card-body">
+                  <h5 class="card-title">Total CC Tickets</h5>
+                  <p id="totalCCTickets" class="card-text"></p>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="d-flex mt-3">
+
               <calcite-shell content-behind class="custom-example-theme ">
                 <calcite-shell-panel id="rightPanel" slot="panel-end" style="height: 65vh!important;" display-mode="float">
                   <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
@@ -302,11 +322,116 @@
           </calcite-shell>
 
           </div>
+          <div class="d-flex mt-3">
+
+            <calcite-shell content-behind class="custom-example-theme">
+              <calcite-shell-panel id="rightPanel" slot="panel-end" style="height: 65vh!important;" display-mode="float">
+                <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
+                  <calcite-chip-group id="type-chips" selection-mode="single-persist">
+                  </calcite-chip-group>
+                  <calcite-block open id="chart-block" heading="Total Affected Service based on Selected Cell on Map for latest 24 hrs">
+                    <canvas class="canvas" id="chart-RFIAffected" height="300" width="400"></canvas>
+                  </calcite-block>
+                  <!-- <calcite-notice slot="footer" open width="full" icon>
+                    <span slot="title">Note</span>
+                    <span slot="message">Click on the graph bars to highlight the data in the map</span>
+                  </calcite-notice> -->
+                </calcite-panel>
+              </calcite-shell-panel>
+          </calcite-shell>
+
+            <calcite-shell content-behind class="custom-example-theme">
+              <calcite-shell-panel id="rightPanel" slot="panel-end" style="height: 65vh!important;" display-mode="float">
+                <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
+                  <calcite-chip-group id="type-chips" selection-mode="single-persist">
+                  </calcite-chip-group>
+                  <calcite-block open id="chart-block" heading="Total Subcategory based on Selected Cell on Map for latest 24 hrs">
+                    <canvas class="canvas" id = "chart-RFISubcategory" height="300" width="400"></canvas>
+                  </calcite-block>
+                  <!-- <calcite-notice slot="footer" open width="full" icon>
+                    <span slot="title">Note</span>
+                    <span slot="message">Click on the graph bars to highlight the data in the map</span>
+                  </calcite-notice> -->
+                </calcite-panel>
+              </calcite-shell-panel>
+          </calcite-shell>
+
+            <calcite-shell content-behind class="custom-example-theme">
+              <calcite-shell-panel id="rightPanel" slot="panel-end" style="height: 65vh!important;" display-mode="float">
+                <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
+                  <calcite-chip-group id="type-chips" selection-mode="single-persist">
+                  </calcite-chip-group>
+                  <calcite-block open id="chart-block" heading="Total Product Type based on Selected Cell on Map for latest 24 hrs">
+                    <canvas class="canvas" id = "chart-RFIPRODUCTTYPE" height="300" width="400"></canvas>
+                  </calcite-block>
+                  <!-- <calcite-notice slot="footer" open width="full" icon>
+                    <span slot="title">Note</span>
+                    <span slot="message">Click on the graph bars to highlight the data in the map</span>
+                  </calcite-notice> -->
+                </calcite-panel>
+              </calcite-shell-panel>
+          </calcite-shell>
+
+          </div>
+          <div class="d-flex mt-3">
+
+            <calcite-shell content-behind class="custom-example-theme">
+              <calcite-shell-panel id="rightPanel" slot="panel-end" style="height: 65vh!important;" display-mode="float">
+                <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
+                  <calcite-chip-group id="type-chips" selection-mode="single-persist">
+                  </calcite-chip-group>
+                  <calcite-block open id="chart-block" heading="Total Affected Service based on Selected Cell on Map for latest 24 hrs">
+                    <canvas class="canvas" id="chart-CCTicketsAffected" height="300" width="400"></canvas>
+                  </calcite-block>
+                  <!-- <calcite-notice slot="footer" open width="full" icon>
+                    <span slot="title">Note</span>
+                    <span slot="message">Click on the graph bars to highlight the data in the map</span>
+                  </calcite-notice> -->
+                </calcite-panel>
+              </calcite-shell-panel>
+          </calcite-shell>
+
+            <calcite-shell content-behind class="custom-example-theme">
+              <calcite-shell-panel id="rightPanel" slot="panel-end" style="height: 65vh!important;" display-mode="float">
+                <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
+                  <calcite-chip-group id="type-chips" selection-mode="single-persist">
+                  </calcite-chip-group>
+                  <calcite-block open id="chart-block" heading="Total Subcategory based on Selected Cell on Map for latest 24 hrs">
+                    <canvas class="canvas" id="chart-CCTicketsSubcategory" height="300" width="400"></canvas>
+                  </calcite-block>
+                  <!-- <calcite-notice slot="footer" open width="full" icon>
+                    <span slot="title">Note</span>
+                    <span slot="message">Click on the graph bars to highlight the data in the map</span>
+                  </calcite-notice> -->
+                </calcite-panel>
+              </calcite-shell-panel>
+          </calcite-shell>
+
+            <calcite-shell content-behind class="custom-example-theme">
+              <calcite-shell-panel id="rightPanel" slot="panel-end" style="height: 65vh!important;" display-mode="float">
+                <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
+                  <calcite-chip-group id="type-chips" selection-mode="single-persist">
+                  </calcite-chip-group>
+                  <calcite-block open id="chart-block" heading="Total Subcategory based on Selected Cell on Map for latest 24 hrs">
+                    <canvas class="canvas" id="chart-CCTicketsArea" height="300" width="400"></canvas>
+                  </calcite-block>
+                  <!-- <calcite-notice slot="footer" open width="full" icon>
+                    <span slot="title">Note</span>
+                    <span slot="message">Click on the graph bars to highlight the data in the map</span>
+                  </calcite-notice> -->
+                </calcite-panel>
+              </calcite-shell-panel>
+          </calcite-shell>
+
+          </div>
 
           <nav>
             <div class="nav nav-tabs mt-3	mb-1" id="nav-tab" role="tablist">
               <button class="nav-link active" id="nav-Towers-tab" data-bs-toggle="tab" data-bs-target="#nav-Towers" type="button" role="tab" aria-controls="nav-Towers" aria-selected="true">Sites</button>
-              <button class="nav-link" id="nav-HPMS-Tickets-tab" data-bs-toggle="tab" data-bs-target="#nav-HPMS-Tickets" type="button" role="tab" aria-controls="nav-HPMS-Tickets" aria-selected="false">HPMS Tickets</button>
+              <button class="nav-link" id="nav-NetworkCoverage-tab" data-bs-toggle="tab" data-bs-target="#nav-NetworkCoverage" type="button" role="tab" aria-controls="nav-NetworkCoverage" aria-selected="true">Network Coverage</button>
+              <button class="nav-link" id="nav-HPMS-Tickets-tab" data-bs-toggle="tab" data-bs-target="#nav-HPMS-Tickets" type="button" role="tab" aria-controls="nav-HPMS-Tickets" aria-selected="false">HPSM Tickets</button>
+              <button class="nav-link" id="nav-RFIsFC-tab" data-bs-toggle="tab" data-bs-target="#nav-RFIsFC" type="button" role="tab" aria-controls="nav-RFIsFC" aria-selected="false">RFIs </button>
+              <button class="nav-link" id="nav-CCTicketsFC-tab" data-bs-toggle="tab" data-bs-target="#nav-CCTicketsFC" type="button" role="tab" aria-controls="nav-CCTicketsFC" aria-selected="false">CC Tickets</button>
               <button class="nav-link" id="nav-Maintenance-Site-Operation-tab" data-bs-toggle="tab" data-bs-target="#nav-Maintenance-Site-Operation" type="button" role="tab" aria-controls="nav-Maintenance-Site-Operation" aria-selected="false">Maintenance Site Operation</button>
               <button class="nav-link" id="nav-OutagesData-tab" data-bs-toggle="tab" data-bs-target="#nav-OutagesData" type="button" role="tab" aria-controls="nav-OutagesData" aria-selected="false" >OutagesData</button>
             </div>
@@ -316,8 +441,20 @@
                  <div id="tableDiv-Towers" >
               </div>
            </div>
+              <div class="container tab-pane fade mb-3" id="nav-NetworkCoverage" role="tabpanel" aria-labelledby="nav-NetworkCoverage-tab" tabindex="0">
+                 <div id="tableDiv-NetworkCoverage" >
+              </div>
+           </div>
             <div class="container tab-pane fade mb-3" id="nav-HPMS-Tickets" role="tabpanel" aria-labelledby="nav-HPMS-Tickets-tab" tabindex="0">
               <div id="tableDiv-HPSMTickets">
+              </div>
+            </div>
+            <div class="container tab-pane fade mb-3" id="nav-RFIsFC" role="tabpanel" aria-labelledby="nav-RFIsFC-tab" tabindex="0">
+              <div id="tableDiv-RFIsFC">
+              </div>
+            </div>
+            <div class="container tab-pane fade mb-3" id="nav-CCTicketsFC" role="tabpanel" aria-labelledby="nav-CCTicketsFC-tab" tabindex="0">
+              <div id="tableDiv-CCTicketsFC">
               </div>
             </div>
             <div class="container tab-pane fade mb-3" id="nav-Maintenance-Site-Operation" role="tabpanel" aria-labelledby="nav-Maintenance-Site-Operation-tab" tabindex="0">
