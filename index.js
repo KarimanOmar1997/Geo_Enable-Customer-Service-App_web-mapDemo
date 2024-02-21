@@ -119,6 +119,123 @@ require([
     console.log("to get 8 :", map.layers.getItemAt(8).title);
     console.log("to get 9.1 :", map.layers.getItemAt(9).allLayers.getItemAt(0).title);
     console.log("to get 9.2 :", map.layers.getItemAt(9).allLayers.getItemAt(1).title);
+    const coverageStatusRenderer = {
+      type: "unique-value",
+      legendOptions: {
+        title: "coverage_status"
+      },
+      field: "coverage_status",
+      uniqueValueInfos: [{
+        value: "Strong",
+        label: "Strong",
+        symbol:         {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#6ed51b",
+          outline: null
+        }
+      }
+      ,
+       {
+        value: "Average",
+        label: "Average",
+        symbol:         {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#fda51b",
+          outline: null
+        }
+      }
+      ,
+       {
+        value: "Poor",
+        label: "Poor",
+        symbol:         {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#e91d1b",
+          outline: null
+        }
+      }
+    ]
+    };
+    const maintentanceRenderer = {
+      type: "unique-value",
+      legendOptions: {
+        title: "maintentance"
+      },
+      field: "maintentance",
+      uniqueValueInfos: [{
+        value: "yes",
+        label: "yes",
+        symbol:         {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "red",
+          outline: null
+        }
+      }, {
+        value: "no",
+        label: "no",
+        symbol:         {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "green",
+          outline: null
+        }
+      }]
+    };
+    const outageRenderer = {
+      type: "unique-value",
+      legendOptions: {
+        title: "outage"
+      },
+      field: "outage",
+      uniqueValueInfos: [{
+        value: "yes",
+        label: "yes",
+        symbol:         {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "red",
+          outline: null
+        }
+      }, {
+        value: "no",
+        label: "no",
+        symbol:         {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "green",
+          outline: null
+        }
+      }]
+    };
+    const NumberOfTicketsRenderer ={
+      type: "simple",
+      symbol: {
+        type: "simple-fill",
+        color: "#238443",
+        outline: null
+      },
+      // use opacity to visualize median household income
+      visualVariables: [
+        {
+          type: "color",
+          field: "number_of_tickets",
+          stops: [
+            { value: 1, color: 'green', label: "1" },
+            { value: 50, color: 'orange', label: "50" },
+            { value: 100, color: 'red', label: "100" }
+          ]
+        }
+      ]
+    }
+    document.getElementById("coverageStatusButton").addEventListener("click", function () {
+      map.layers.getItemAt(5).renderer = coverageStatusRenderer;
+    });
+    document.getElementById("maintentanceButton").addEventListener("click", function () {
+      map.layers.getItemAt(5).renderer = maintentanceRenderer;
+    });
+    document.getElementById("outageButton").addEventListener("click", function () {
+      map.layers.getItemAt(5).renderer = outageRenderer;
+    });
+    document.getElementById("NumberOfTicketsButton").addEventListener("click", function () {
+      map.layers.getItemAt(5).renderer = NumberOfTicketsRenderer;
+    });
     function gitTotalAllRFIAndCCTickets(){
       map.layers.getItemAt(9).allLayers.getItemAt(0).when(function() {
         map.layers.getItemAt(9).allLayers.getItemAt(0).queryFeatureCount().then(function(count){
@@ -646,6 +763,7 @@ require([
 
     // add the toolbar for the measurement widgets
     view.ui.add("topbar", "top-right");
+    view.ui.add("classification", "bottom-left");
 
     // create the measurement widgets and hide them by default
     const distanceMeasurement2D = new DistanceMeasurement2D({
