@@ -1137,6 +1137,8 @@ require([
         ChartCCTickets(site_id ,"affected_service" , "chart-CCTicketsAffected");
         ChartCCTickets(site_id ,"subcategory" , "chart-CCTicketsSubcategory");
         ChartCCTickets(site_id ,"area" , "chart-CCTicketsArea");
+
+
         MaintenanceSiteOperationFeatureLayer.queryFeatures(queryParams)
           .then(function (result) {
 
@@ -1385,6 +1387,14 @@ require([
         
 
       } else {
+        document.getElementById("totalRFI").innerText = 0;
+        document.getElementById("totalCCTickets").innerText = 0;
+        ChartRFIA(1 , "Affected_Service" , "chart-RFIAffected");
+        ChartRFIA(1 ,"SUBCATEGORY" , "chart-RFISubcategory");
+        ChartRFIA(1 ,"PRODUCT_TYPE" , "chart-RFIPRODUCTTYPE");
+        ChartCCTickets(1 ,"affected_service" , "chart-CCTicketsAffected");
+        ChartCCTickets(1 ,"subcategory" , "chart-CCTicketsSubcategory");
+        ChartCCTickets(1 ,"area" , "chart-CCTicketsArea");
         if (caller == "search") {
           document.getElementById("Data_Container_By_Search").innerHTML = `<h3 style="color:gray"> No Data Found </h3>`
         } else if (caller == "select_on_map") {
@@ -1468,11 +1478,17 @@ require([
       // run stats query to return total number of Tickets by time of day
       // stats results will be grouped by the time of day
       const RFIResult = await runRFIQuery(cgi, fieldName);
-      for (let feature of RFIResult.features) {
-        RFIData.push(feature.attributes["count"]);
-        // console.log(feature.attributes);
-        RFILabels.push(feature.attributes[fieldName]);
-      }
+      // for (let feature of RFIResult.features) {
+      // for (let feature of RFIResult) {
+      //   RFIData.push(feature.attributes["count"]);
+      //   // console.log(feature.attributes);
+      //   RFILabels.push(feature.attributes[fieldName]);
+      // }
+      Object.keys(RFIResult).forEach(key => {
+        const value = RFIResult[key];
+        RFIData.push(value);
+        RFILabels.push(key);
+    });
   
       // create a bar chart showing total number of Tickets by time of day
       updatePieChart(contenar, RFIData, RFILabels, false, 50);
@@ -1484,11 +1500,16 @@ require([
       // run stats query to return total number of Tickets by time of day
       // stats results will be grouped by the time of day
       const CCTicketsResult = await runCCTicketsQuery(cgi, fieldName);
-      for (let feature of CCTicketsResult.features) {
-        CCTicketsData.push(feature.attributes["count"]);
-        // console.log(feature.attributes);
-        CCTicketsLabels.push(feature.attributes[fieldName]);
-      }
+      // for (let feature of CCTicketsResult) {
+      //   CCTicketsData.push(feature.attributes["count"]);
+      //   // console.log(feature.attributes);
+      //   CCTicketsLabels.push(feature.attributes[fieldName]);
+      // }
+      Object.keys(CCTicketsResult).forEach(key => {
+        const value = CCTicketsResult[key];
+        CCTicketsData.push(value);
+        CCTicketsLabels.push(key);
+    });
   
       // create a bar chart showing total number of Tickets by time of day
       updateChart(contenar, CCTicketsData, CCTicketsLabels, false, 50);
@@ -1560,10 +1581,50 @@ require([
       query.groupByFieldsForStatistics = [groupStats];
       query.orderByFields = [groupStats];
 
+      
       let result = await layerRFI.queryFeatures(query);
-        console.log("result",result);
-       
-      return result;
+
+      const top1Subcategories = result.features.slice(0, 10)
+      console.log("top1Subcategories",top1Subcategories);
+
+//======================================================= by top 10 records ===================================
+
+      const queryParams = {
+        where: cgi ? `Creation_Date_Time >= '${twentyFourHoursAgo.toISOString()}' AND cgi = '${cgi}'`: `Creation_Date_Time >= '${twentyFourHoursAgo.toISOString()}'`, // Specify your query parameters
+        outFields: '*', // Specify the fields you want to retrieve
+        returnGeometry: true,
+        orderByFields: "Creation_Date_Time DESC",
+        // resultRecordCount: 1,
+      };
+      let resultQuery = await layerRFI.queryFeatures(queryParams);
+      const top10features = resultQuery.features.slice(0, 10)
+
+      const subcategoryCounts = {};
+      top10features.forEach(function(feature) {
+            const subcategory = feature.attributes[groupStats]; // Assuming your subcategory field is 'Subcategory'
+            if (subcategory in subcategoryCounts) {
+                subcategoryCounts[subcategory]++;
+            } else {
+                subcategoryCounts[subcategory] = 1;
+            }
+        });
+
+        // 4. Sort subcategories by ticket count
+        const sortedSubcategories = Object.keys(subcategoryCounts).sort(function(a, b) {
+          return subcategoryCounts[b] - subcategoryCounts[a];
+      });
+
+      const top10Subcategories = sortedSubcategories.slice(0, 10);
+
+      const subcategoryCounts2 = {};
+
+      top10Subcategories.forEach(function(feature) {
+
+        subcategoryCounts2[feature] = subcategoryCounts[feature]
+
+      })
+
+      return subcategoryCounts2;
     }
 
     async function runCCTicketsQuery(cgi, groupStats) {
@@ -1591,9 +1652,50 @@ require([
       query.orderByFields = [groupStats];
 
       let result = await layerCCTickets.queryFeatures(query);
-        console.log("result",result);
+
+      const top1Subcategories = result.features.slice(0, 10)
+
+        console.log("top1Subcategories",top1Subcategories);
+
+        //======================================================= by top 10 records ===================================
+
+      const queryParams = {
+        where: cgi ? `sd_open_time >= '${twentyFourHoursAgo.toISOString()}' AND cgi = '${cgi}'`: `sd_open_time >= '${twentyFourHoursAgo.toISOString()}'`, // Specify your query parameters
+        outFields: '*', // Specify the fields you want to retrieve
+        returnGeometry: true,
+        orderByFields: "sd_open_time DESC",
+        // resultRecordCount: 1,
+    };
+    let resultQuery = await layerCCTickets.queryFeatures(queryParams);
+    const top10features = resultQuery.features.slice(0, 10)
+
+    const subcategoryCounts = {};
+    top10features.forEach(function(feature) {
+            const subcategory = feature.attributes[groupStats]; // Assuming your subcategory field is 'Subcategory'
+            if (subcategory in subcategoryCounts) {
+                subcategoryCounts[subcategory]++;
+            } else {
+                subcategoryCounts[subcategory] = 1;
+            }
+        });
+
+        // 4. Sort subcategories by ticket count
+        const sortedSubcategories = Object.keys(subcategoryCounts).sort(function(a, b) {
+          return subcategoryCounts[b] - subcategoryCounts[a];
+      });
+
+      const top10Subcategories = sortedSubcategories.slice(0, 10);
+
+      const subcategoryCounts2 = {};
+
+      top10Subcategories.forEach(function(feature) {
+
+        subcategoryCounts2[feature] = subcategoryCounts[feature]
+
+      })
+
+      return subcategoryCounts2;
        
-      return result;
     }
 
     // Keeps track of a selected bar on monthly or week day chart
@@ -1707,15 +1809,15 @@ require([
       chart.data.datasets[0].backgroundColor[index] = color;
       chart.update();
     }
-
+//=============================== update sunday ==========================
     // UI controls visible in the upper right panel
     let activeGraph = "day";
     const chartChoiceControl = document.getElementById("type-chips");
-    const chartBlock = document.getElementById("chart-block");
+    // const chartBlock = document.getElementById("chart-block");
     const chartDay = document.getElementById("chart-day");
     const chartWeek = document.getElementById("chart-week");
     const chartMonth = document.getElementById("chart-month");
-    const dayChartBreakDownBlock = document.getElementById("day-chart-block");
+    // const dayChartBreakDownBlock = document.getElementById("chart-day");
 
     // Show the corresponding chart when user clicks one of the three buttons
     chartChoiceControl?.addEventListener("calciteChipGroupSelect", (event) => {
@@ -1725,21 +1827,21 @@ require([
       }
       layerView.featureEffect = undefined;
       previouslySelectedBarIndex = null;
-      dayChartBreakDownBlock.style.display = "none";
+      // dayChartBreakDownBlock.style.display = "none";
       chartDay.style.display = "none";
       chartWeek.style.display = "none";
       chartMonth.style.display = "none";
       switch (event.target.selectedItems[0].value) {
         case "day":
-          chartBlock.heading = "Total Tickets by time of day";
+          // chartBlock.heading = "Total Tickets by time of day";
           chartDay.style.display = "block";
           break;
         case "week":
-          chartBlock.heading = "Total Tickets by day of week";
+          // chartBlock.heading = "Total Tickets by day of week";
           chartWeek.style.display = "block";
           break;
         case "month":
-          chartBlock.heading = "Total Tickets by month";
+          // chartBlock.heading = "Total Tickets by month";
           chartMonth.style.display = "block";
         default:
       }
@@ -1751,9 +1853,18 @@ require([
 
     function updatePieChart(canvas, data, labels, remove, max) {
       const canvasElement = document.getElementById(canvas);
-
+      const child = document.getElementById(canvas + 'Canvas')
+      if (child) {
+        canvasElement.removeChild(child);
+      }
+      const canvas2 =  document.createElement("canvas")
+      canvas2.classList.add = 'canvas'
+      canvas2.id = canvas + 'Canvas'
+      canvas2.width = '400'
+      canvas2.height = '300'
+      canvasElement.appendChild(canvas2)
       // Get the canvas element and render the chart in it
-      let chart = new Chart(canvasElement.getContext("2d"), {
+      let chart = new Chart(canvas2.getContext("2d"), {
         type: "doughnut",
         data: {
           labels: labels,
@@ -1800,11 +1911,21 @@ require([
     }
 
     function updateChart(canvas, data, labels, remove, max) {
-      const canvasElement = document.getElementById(canvas);
 
       const backgroundColors = Array(data.length).fill("#007AC2");
+      const canvasElement = document.getElementById(canvas);
+      const child = document.getElementById(canvas + 'Canvas')
+      if (child) {
+        canvasElement.removeChild(child);
+      }
+      const canvas2 =  document.createElement("canvas")
+      canvas2.classList.add = 'canvas'
+      canvas2.id = canvas + 'Canvas'
+      canvas2.width = '400'
+      canvas2.height = '270'
+      canvasElement.appendChild(canvas2)
       // Get the canvas element and render the chart in it
-      let chart = new Chart(canvasElement.getContext("2d"), {
+      let chart = new Chart(canvas2.getContext("2d"), {
         type: "bar",
         data: {
           labels: labels,

@@ -307,14 +307,25 @@
                       <!-- <calcite-chip appearance="outline-fill" value="week">Weekly</calcite-chip> -->
                       <calcite-chip appearance="outline-fill" value="month">Monthly</calcite-chip>
                     </calcite-chip-group>
-                    <calcite-block open id="chart-block" heading="Total SD OPEN_TIME by time of day">
+                    <calcite-block open id="chart-day" heading="Total SD OPEN_TIME by time of day">
+                    </calcite-block>
+                    <calcite-block open id="chart-week" heading="Total SD OPEN_TIME by time of week" style="display:none">
+                    </calcite-block>
+                    <calcite-block open id="chart-month" heading="Total SD OPEN_TIME by time of month" style="display:none">
+                    </calcite-block>
+                    <!-- <canvas class="canvas" id="chart-week" height="270" width="400" style="display:none"></canvas> -->
+                      <!-- <canvas class="canvas" id="chart-month" height="270" width="400" style="display:none"></canvas> -->
+                    <!-- <calcite-block open id="chart-block" heading="Total SD OPEN_TIME by time of day">
                       <canvas class="canvas" id="chart-day" height="270" width="400"></canvas>
                       <canvas class="canvas" id="chart-week" height="270" width="400" style="display:none"></canvas>
                       <canvas class="canvas" id="chart-month" height="270" width="400" style="display:none"></canvas>
+                    </calcite-block> -->
+                    <calcite-block open id="chart-day-distribution" heading="Click on the graph bar to see hourly chart" style="display:none">
+                      <!-- <canvas class="canvas" id="chart-day-distribution" height="200" width="400"></canvas> -->
                     </calcite-block>
-                    <calcite-block open id="day-chart-block" heading="Click on the graph bar to see hourly chart" style="display:none">
+                    <!-- <calcite-block open id="day-chart-block" heading="Click on the graph bar to see hourly chart" style="display:none">
                       <canvas class="canvas" id="chart-day-distribution" height="200" width="400"></canvas>
-                    </calcite-block>
+                    </calcite-block> -->
                     <!-- <calcite-notice slot="footer" open width="full" icon>
                       <span slot="title">Note</span>
                       <span slot="message">Click on the graph bars to highlight the data in the map</span>
@@ -328,8 +339,8 @@
                 <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
                   <calcite-chip-group id="type-chips" selection-mode="single-persist">
                   </calcite-chip-group>
-                  <calcite-block open id="chart-block" heading="Total HPMS Tickets by SD Status">
-                    <canvas class="canvas" id="chart-SDStatus" height="300" width="400"></canvas>
+                  <calcite-block open id="chart-SDStatus" heading="Total HPMS Tickets by SD Status">
+                    <!-- <canvas class="canvas" id="chart-SDStatus" height="300" width="400"></canvas> -->
                   </calcite-block>
                   <!-- <calcite-notice slot="footer" open width="full" icon>
                     <span slot="title">Note</span>
@@ -344,8 +355,8 @@
                 <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
                   <calcite-chip-group id="type-chips" selection-mode="single-persist">
                   </calcite-chip-group>
-                  <calcite-block open id="chart-block" heading="Total Tickets by Sub Category">
-                    <canvas class="canvas" id="chart-subcategory" height="290" width="400"></canvas>
+                  <calcite-block open id="chart-subcategory" heading="Total Tickets by Sub Category">
+                    <!-- <canvas class="canvas" id="chart-subcategory" height="290" width="400"></canvas> -->
                   </calcite-block>
                   <!-- <calcite-notice slot="footer" open width="full" icon>
                     <span slot="title">Note</span>
@@ -363,8 +374,8 @@
                 <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
                   <calcite-chip-group id="type-chips" selection-mode="single-persist">
                   </calcite-chip-group>
-                  <calcite-block open id="chart-block" heading="Total RFI Affected Service based on Selected Cell on Map for latest 24 hrs">
-                    <canvas class="canvas" id="chart-RFIAffected" height="300" width="400"></canvas>
+                  <calcite-block open id="chart-RFIAffected" heading="Total RFI Affected Service based on Selected Cell on Map for latest 24 hrs">
+                    <!-- <canvas class="canvas" id="chart-RFIAffected" height="300" width="400"></canvas> -->
                   </calcite-block>
                   <!-- <calcite-notice slot="footer" open width="full" icon>
                     <span slot="title">Note</span>
@@ -379,8 +390,8 @@
                 <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
                   <calcite-chip-group id="type-chips" selection-mode="single-persist">
                   </calcite-chip-group>
-                  <calcite-block open id="chart-block" heading="Total RFI Subcategory based on Selected Cell on Map for latest 24 hrs">
-                    <canvas class="canvas" id = "chart-RFISubcategory" height="300" width="400"></canvas>
+                  <calcite-block open id="chart-RFISubcategory" heading="Total RFI Subcategory based on Selected Cell on Map for latest 24 hrs">
+                    <!-- <canvas class="canvas" id = "chart-RFISubcategory" height="300" width="400"></canvas> -->
                   </calcite-block>
                   <!-- <calcite-notice slot="footer" open width="full" icon>
                     <span slot="title">Note</span>
@@ -395,8 +406,8 @@
                 <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
                   <calcite-chip-group id="type-chips" selection-mode="single-persist">
                   </calcite-chip-group>
-                  <calcite-block open id="chart-block" heading="Total RFI Product Type based on Selected Cell on Map for latest 24 hrs">
-                    <canvas class="canvas" id = "chart-RFIPRODUCTTYPE" height="300" width="400"></canvas>
+                  <calcite-block open id="chart-RFIPRODUCTTYPE" heading="Total RFI Product Type based on Selected Cell on Map for latest 24 hrs">
+                    <!-- <canvas class="canvas" id = "chart-RFIPRODUCTTYPE" height="300" width="400"></canvas> -->
                   </calcite-block>
                   <!-- <calcite-notice slot="footer" open width="full" icon>
                     <span slot="title">Note</span>
@@ -414,8 +425,8 @@
                 <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
                   <calcite-chip-group id="type-chips" selection-mode="single-persist">
                   </calcite-chip-group>
-                  <calcite-block open id="chart-block" heading="Total CCTickets Affected Service based on Selected Cell on Map for latest 24 hrs">
-                    <canvas class="canvas" id="chart-CCTicketsAffected" height="300" width="400"></canvas>
+                  <calcite-block open id="chart-CCTicketsAffected" heading="Total CCTickets Affected Service based on Selected Cell on Map for latest 24 hrs">
+                    <!-- <canvas class="canvas" id="chart-CCTicketsAffected" height="300" width="400"></canvas> -->
                   </calcite-block>
                   <!-- <calcite-notice slot="footer" open width="full" icon>
                     <span slot="title">Note</span>
@@ -430,8 +441,8 @@
                 <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
                   <calcite-chip-group id="type-chips" selection-mode="single-persist">
                   </calcite-chip-group>
-                  <calcite-block open id="chart-block" heading="Total CCTickets Subcategory based on Selected Cell on Map for latest 24 hrs">
-                    <canvas class="canvas" id="chart-CCTicketsSubcategory" height="300" width="400"></canvas>
+                  <calcite-block open id="chart-CCTicketsSubcategory" heading="Total CCTickets Subcategory based on Selected Cell on Map for latest 24 hrs">
+                    <!-- <canvas class="canvas" id="chart-CCTicketsSubcategory" height="300" width="400"></canvas> -->
                   </calcite-block>
                   <!-- <calcite-notice slot="footer" open width="full" icon>
                     <span slot="title">Note</span>
@@ -446,8 +457,8 @@
                 <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
                   <calcite-chip-group id="type-chips" selection-mode="single-persist">
                   </calcite-chip-group>
-                  <calcite-block open id="chart-block" heading="Total CCTickets Subcategory based on Selected Cell on Map for latest 24 hrs">
-                    <canvas class="canvas" id="chart-CCTicketsArea" height="300" width="400"></canvas>
+                  <calcite-block open id="chart-CCTicketsArea" heading="Total CCTickets Subcategory based on Selected Cell on Map for latest 24 hrs">
+                    <!-- <canvas class="canvas" id="chart-CCTicketsArea" height="300" width="400"></canvas> -->
                   </calcite-block>
                   <!-- <calcite-notice slot="footer" open width="full" icon>
                     <span slot="title">Note</span>
