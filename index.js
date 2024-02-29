@@ -117,8 +117,10 @@ require([
     console.log("to get 6 :", map.layers.getItemAt(6).title);
     console.log("to get 7 :", map.layers.getItemAt(7).title);
     console.log("to get 8 :", map.layers.getItemAt(8).title);
-    console.log("to get 9.1 :", map.layers.getItemAt(9).allLayers.getItemAt(0).title);
-    console.log("to get 9.2 :", map.layers.getItemAt(9).allLayers.getItemAt(1).title);
+    console.log("to get 9 :", map.layers.getItemAt(9).title);
+    console.log("to get 10 :", map.layers.getItemAt(10).title);
+    console.log("to get 11 :", map.layers.getItemAt(11).title);
+    // console.log("to get 9.2 :", map.layers.getItemAt(9).allLayers.getItemAt(1).title);
     const coverageStatusRenderer = {
       type: "unique-value",
       legendOptions: {
@@ -237,8 +239,8 @@ require([
       map.layers.getItemAt(5).renderer = NumberOfTicketsRenderer;
     });
     function gitTotalAllRFIAndCCTickets(){
-      map.layers.getItemAt(9).allLayers.getItemAt(0).when(function() {
-        map.layers.getItemAt(9).allLayers.getItemAt(0).queryFeatureCount().then(function(count){
+      map.layers.getItemAt(9).when(function() {
+        map.layers.getItemAt(9).queryFeatureCount().then(function(count){
           console.log("Total number of features:", count);
           // You can display this number wherever you want, for example:
           document.getElementById("totalRFI").innerText =  count;
@@ -246,8 +248,8 @@ require([
           console.error("Error getting feature count:", error);
         });
       });
-      map.layers.getItemAt(9).allLayers.getItemAt(1).when(function() {
-        map.layers.getItemAt(9).allLayers.getItemAt(1).queryFeatureCount().then(function(count){
+      map.layers.getItemAt(10).when(function() {
+        map.layers.getItemAt(10).queryFeatureCount().then(function(count){
           console.log("Total number of features:", count);
           // You can display this number wherever you want, for example:
           document.getElementById("totalCCTickets").innerText =  count;
@@ -705,6 +707,7 @@ require([
       featureTableHPSMTickets.highlightIds.removeAll();
       featureTableRFIsFC.highlightIds.removeAll();
       featureTableCCTickets.highlightIds.removeAll();
+      featureTableJammerSites.highlightIds.removeAll();
       featureTableTwors.highlightIds.removeAll();
       featureTableNetworkCoverage.highlightIds.removeAll();
       document.getElementById("Data_Container_By_Select").innerHTML = " "
@@ -1406,8 +1409,8 @@ require([
     // ========================================charts==============================================
 
     const layer = map.layers.getItemAt(6);
-    const layerRFI = map.layers.getItemAt(9).allLayers.getItemAt(0)
-    const layerCCTickets = map.layers.getItemAt(9).allLayers.getItemAt(1)
+    const layerRFI = map.layers.getItemAt(9)
+    const layerCCTickets = map.layers.getItemAt(10)
 
     // console.log(layer);
     await layer.load();
@@ -1751,7 +1754,7 @@ require([
           const queryValue = label;
           where = `extract(hour from sd_open_time) = ${queryValue}`;
           // console.log(where);
-        } else if (event.target.id == "chart-month") {
+        } else if (event.target.id == "chart-monthCanvas") {
           // apply effect to Tickets happened during the selected month
           const queryValue = monthLabels.indexOf(label) + 1;
           where = `extract(month from sd_open_time) = ${queryValue}`;
@@ -1768,10 +1771,10 @@ require([
         } else if (event.target.id == "chart-week") {
           // apply effect to Tickets happened during the selected week day
           const queryValue = weekLabels.indexOf(label) + 1;
-          // where = `sd_open_time = ${queryValue}`;
-          // where = `DAY_WEEK = ${queryValue}`;
-          // const title = "Tickets by hours on " + label;
-          // dayDistributionStats(where, "extract(hour from sd_open_time)", title);
+          where = `sd_open_time = ${queryValue}`;
+          where = `DAY_WEEK = ${queryValue}`;
+          const title = "Tickets by hours on " + label;
+          dayDistributionStats(where, "extract(hour from sd_open_time)", title);
         }
         layerView.featureEffect = {
           filter: {
@@ -1996,26 +1999,33 @@ require([
     }
 
 
-    // ===========================================================tables========================================
+    // =========================================================== tables ========================================
 
     const featureLayerTwors = map.layers.getItemAt(7); // Grabs the first layer in the map
     const featureLayerHPSMTickets = map.layers.getItemAt(6); // Grabs the first layer in the map
     const featureLayerNetworkCoverage = map.layers.getItemAt(5); // Grabs the first layer in the map
-    const featureLayerRFIsFC = map.layers.getItemAt(9).allLayers.getItemAt(0); // Grabs the first layer in the map
-    const featureLayerCCTicketsFCExportFeatures = map.layers.getItemAt(9).allLayers.getItemAt(1); // Grabs the first layer in the map
+    const featureLayerRFIsFC = map.layers.getItemAt(9); // Grabs the first layer in the map
+    const featureLayerCCTicketsFCExportFeatures = map.layers.getItemAt(10); // Grabs the first layer in the map
+    const featureLayerJammerSites = map.layers.getItemAt(11); // Grabs the first layer in the map
     const featureLayerMaintenanceSiteOperation = new FeatureLayer({
       url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/4"
     });
     const featureLayerOutagesData = new FeatureLayer({
       url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/5"
     });
-    featureLayerTwors.title = "Sites";
-    featureLayerHPSMTickets.title = "HPSM Tickets";
-    featureLayerMaintenanceSiteOperation.title = "Maintenance Site Operation";
-    featureLayerOutagesData.title = "OutagesData";
-    featureLayerNetworkCoverage.title = "Network Coverage";
-    featureLayerRFIsFC.title = "RFIs FC";
-    featureLayerCCTicketsFCExportFeatures.title = "CCTicketsFC ExportFeatures";
+    const featureLayerInterference = new FeatureLayer({
+      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Cell_Site_Data/FeatureServer/6"
+    });
+    const featureLayerNMSIncident = new FeatureLayer({
+      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/NMS_Incident/FeatureServer/4"
+    });
+    // featureLayerTwors.title = "Sites";
+    // featureLayerHPSMTickets.title = "HPSM Tickets";
+    // featureLayerMaintenanceSiteOperation.title = "Maintenance Site Operation";
+    // featureLayerOutagesData.title = "OutagesData";
+    // featureLayerNetworkCoverage.title = "Network Coverage";
+    // featureLayerRFIsFC.title = "RFIs FC";
+    // featureLayerCCTicketsFCExportFeatures.title = "CCTicketsFC ExportFeatures";
 
     // Create the feature table
     const featureTableTwors = new FeatureTable({
@@ -2116,7 +2126,6 @@ require([
       container: document.getElementById("tableDiv-Towers")
     });
 
-    // Create the feature table
     const featureTableHPSMTickets = new FeatureTable({
       view: view, // Required for feature highlight to work
       layer: featureLayerHPSMTickets,
@@ -3095,6 +3104,198 @@ require([
       },
       container: document.getElementById("tableDiv-CCTicketsFC")
     });
+    const featureTableJammerSites = new FeatureTable({
+      view: view, // Required for feature highlight to work
+      layer: featureLayerJammerSites,
+      visibleElements: {
+        // Autocast to VisibleElements
+        menuItems: {
+          clearSelection: true,
+          refreshData: true,
+          toggleColumns: true,
+          selectedRecordsShowAllToggle: true,
+          selectedRecordsShowSelectedToggle: true,
+          zoomToSelection: true
+        }
+      },
+      tableTemplate: {
+        // Autocast to TableTemplate
+        columnTemplates: [
+          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
+          {
+            // Autocast to FieldColumnTemplate.
+            type: "field",
+            fieldName: "Site_ID",
+            label: "Site ID",
+           
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "Full_Site_Name",
+            label: "Full Site Name"
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "Longitude",
+            label: "Longitude"
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "Latitude",
+            label: "Latitude"
+          }
+ 
+        ]
+      },
+      container: document.getElementById("tableDiv-JammerSites")
+    });
+    const featureTableInterference = new FeatureTable({
+      view: view, // Required for feature highlight to work
+      layer: featureLayerInterference,
+      visibleElements: {
+        // Autocast to VisibleElements
+        menuItems: {
+          clearSelection: true,
+          refreshData: true,
+          toggleColumns: true,
+          selectedRecordsShowAllToggle: true,
+          selectedRecordsShowSelectedToggle: true,
+          zoomToSelection: true
+        }
+      },
+      tableTemplate: {
+        // Autocast to TableTemplate
+        columnTemplates: [
+          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
+          {
+            // Autocast to FieldColumnTemplate.
+            type: "field",
+            fieldName: "Date",
+            label: "Date",
+           
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "Cell_FDD_TDD_Indication",
+            label: "Cell FDD TDD Indication"
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "eNodeB_Name",
+            label: "eNodeB Name"
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "Cell_Name",
+            label: "Cell Name"
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "eNodeB_Function_Name",
+            label: "eNodeB Function Name"
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "LocalCell_Id",
+            label: "LocalCell ID"
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "Integrity",
+            label: "Integrity"
+          }
+          ,
+          {
+            type: "field",
+            fieldName: "LULInterferenceAvg_dBm_",
+            label: "LULInterferenceAvg dBm"
+          }
+ 
+        ]
+      },
+      container: document.getElementById("tableDiv-Interference")
+    });
+    const featureTableNMSIncident = new FeatureTable({
+      view: view, // Required for feature highlight to work
+      layer: featureLayerNMSIncident,
+      visibleElements: {
+        // Autocast to VisibleElements
+        menuItems: {
+          clearSelection: true,
+          refreshData: true,
+          toggleColumns: true,
+          selectedRecordsShowAllToggle: true,
+          selectedRecordsShowSelectedToggle: true,
+          zoomToSelection: true
+        }
+      },
+      // tableTemplate: {
+      //   // Autocast to TableTemplate
+      //   columnTemplates: [
+      //     // Takes an array of FieldColumnTemplate and GroupColumnTemplate
+      //     {
+      //       // Autocast to FieldColumnTemplate.
+      //       type: "field",
+      //       fieldName: "NUMBER_",
+      //       label: "NUMBER",
+           
+      //     }
+      //     ,
+      //     {
+      //       type: "field",
+      //       fieldName: "CATEGORY",
+      //       label: "CATEGORY"
+      //     }
+      //     ,
+      //     {
+      //       type: "field",
+      //       fieldName: "OPEN_TIME",
+      //       label: "OPEN TIME"
+      //     }
+      //     ,
+      //     {
+      //       type: "field",
+      //       fieldName: "OPENED_BY",
+      //       label: "OPENED BY"
+      //     }
+      //     ,
+      //     {
+      //       type: "field",
+      //       fieldName: "PRIORITY_CODE",
+      //       label: "PRIORITY CODE"
+      //     }
+      //     ,
+      //     {
+      //       type: "field",
+      //       fieldName: "SEVERITY",
+      //       label: "SEVERITY"
+      //     }
+      //     ,
+      //     {
+      //       type: "field",
+      //       fieldName: "Integrity",
+      //       label: "Integrity"
+      //     }
+      //     ,
+      //     {
+      //       type: "field",
+      //       fieldName: "LULInterferenceAvg_dBm_",
+      //       label: "LULInterferenceAvg dBm"
+      //     }
+ 
+      //   ]
+      // },
+      container: document.getElementById("tableDiv-NMSIncident")
+    });
 
     // Listen for when the view is stationary.
     // If true, set the table to display only the attributes
@@ -3109,6 +3310,7 @@ require([
         featureTableNetworkCoverage.filterGeometry = view.extent;
         featureTableRFIsFC.filterGeometry = view.extent;
         featureTableCCTickets.filterGeometry = view.extent;
+        featureTableJammerSites.filterGeometry = view.extent;
       },
       {
         initial: true
@@ -3125,6 +3327,7 @@ require([
       featureTableNetworkCoverage.highlightIds.removeAll();
       featureTableRFIsFC.highlightIds.removeAll();
       featureTableCCTickets.highlightIds.removeAll();
+      featureTableJammerSites.highlightIds.removeAll();
       gitTotalAllRFIAndCCTickets()
       ChartRFIA(0 , "Affected_Service" , "chart-RFIAffected");
       ChartRFIA(0 ,"SUBCATEGORY" , "chart-RFISubcategory");
@@ -3148,6 +3351,12 @@ require([
           return result.graphic &&
             result.graphic.layer &&
             result.graphic.layer === featureLayerRFIsFC
+
+        }
+        else if (result.graphic.layer === featureLayerJammerSites) {
+          return result.graphic &&
+            result.graphic.layer &&
+            result.graphic.layer === featureLayerJammerSites
 
         }
         else if (result.graphic.layer === map.layers.getItemAt(5)) {
@@ -3244,6 +3453,18 @@ require([
           } else {
             // Add this feature to the featureTableHPSMTickets highlightIds collection
             featureTableCCTickets.highlightIds.add(objectId);
+          }
+        }
+        else if (candidate.layer.title == "Cell_Site_Data - Jammer_Sites") {
+
+
+          if (featureTableJammerSites.highlightIds.includes(objectId)) {
+            // Remove feature from current selection if feature
+            // is already added to highlightIds collection
+            featureTableJammerSites.highlightIds.remove(objectId);
+          } else {
+            // Add this feature to the featureTableHPSMTickets highlightIds collection
+            featureTableJammerSites.highlightIds.add(objectId);
           }
         }
         else if (candidate.layer.title == "Governerate") {
@@ -3356,6 +3577,26 @@ require([
             // highlightIds collection count. If not, update filter selection.
             if (selectionIdCount !== highlightIdsCount) {
               featureTableCCTickets.filterBySelection();
+            }
+          }
+        });
+      }
+    );
+    reactiveUtils.watch(
+      () => featureTableJammerSites.highlightIds.length,
+      (highlightIdsCount) => {
+        // Iterate through the filters within the table.
+        // If the active filter is "Show selection",
+        // changes made to highlightIds (adding/removing)
+        // are reflected.
+
+        featureTableJammerSites.viewModel.activeFilters.forEach((filter) => {
+          if (filter.type === "selection") {
+            selectionIdCount = filter.objectIds.length; // the filtered selection's id count
+            // Check that the filter selection count is equal to the
+            // highlightIds collection count. If not, update filter selection.
+            if (selectionIdCount !== highlightIdsCount) {
+              featureTableJammerSites.filterBySelection();
             }
           }
         });
