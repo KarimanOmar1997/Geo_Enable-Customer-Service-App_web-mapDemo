@@ -894,12 +894,24 @@ require([
     typeSelect.addEventListener("change", async () => {
       const value = typeSelect.value;
       const layer = map.layers.getItemAt(6);
+      const layerCCTicketsFC = map.layers.getItemAt(10);
       await layer.load();
+      await layerCCTicketsFC.load();
       // Create an array of layerViews to be able to highlight selected features.
       if (layer.type === "feature") {
         const layerView = await view.whenLayerView(layer);
 
         layerView.filter =
+          value === "all"
+            ? null
+            : {
+              where: `sd_status = '${value}'`
+            };
+      }
+      if (layerCCTicketsFC.type === "feature") {
+        const layerViewCCTicketsFC = await view.whenLayerView(layerCCTicketsFC);
+
+        layerViewCCTicketsFC.filter =
           value === "all"
             ? null
             : {
@@ -1418,7 +1430,7 @@ require([
     await layerCCTickets.load();
     let layerView = await view.whenLayerView(layer);
     let layerRFIView = await view.whenLayerView(layerRFI);
-    let layerCCTicketsView = await view.whenLayerView(layer);
+    let layerCCTicketsView = await view.whenLayerView(layerCCTickets);
 
 
     // prepare data for total Tickets by time of day chart
@@ -1711,6 +1723,9 @@ require([
     async function applyFilterToTicketsData(event, chart) {
       const activePoints = chart.getElementsAtEvent(event);
       // user did not click on a bar. stop here.
+      console.log("event" , event);
+      console.log("chart" , chart);
+      console.log(activePoints);
       if (activePoints.length == 0) {
         return;
       }
@@ -1729,6 +1744,7 @@ require([
         if (previouslySelectedBarIndex === idx) {
           previouslySelectedBarIndex = null;
           layerView.featureEffect = undefined;
+          layerCCTicketsView.featureEffect = undefined;
 
           if (dayDistributionChart) {
             dayDistributionChart.data.datasets[0].data = [];
@@ -1750,25 +1766,27 @@ require([
         previouslySelectedBarIndex = idx;
         let where;
         // apply effect to Tickets happened during the selected hour
-        if (event.target.id == "chart-day") {
+        console.log(event.target.id);
+        if (event.target.id == "chart-dayCanvas") {
           const queryValue = label;
           where = `extract(hour from sd_open_time) = ${queryValue}`;
           // console.log(where);
         } else if (event.target.id == "chart-monthCanvas") {
+         
           // apply effect to Tickets happened during the selected month
           const queryValue = monthLabels.indexOf(label) + 1;
           where = `extract(month from sd_open_time) = ${queryValue}`;
           const title = "Tickets by days in " + label;
           dayDistributionStats(where, "extract(day from sd_open_time)", title);
-        } else if (event.target.id == "chart-SDStatus") {
+        } else if (event.target.id == "chart-SDStatusCanvas") {
           // apply effect to Tickets happened during the selected month
           const queryValue = label;
           where = `sd_status = '${queryValue}'`;
-        } else if (event.target.id == "chart-subcategory") {
+        } else if (event.target.id == "chart-subcategoryCanvas") {
           // apply effect to Tickets happened during the selected month
           const queryValue = label;
           where = `subcategory = '${queryValue}'`;
-        } else if (event.target.id == "chart-week") {
+        } else if (event.target.id == "chart-weekCanvas") {
           // apply effect to Tickets happened during the selected week day
           const queryValue = weekLabels.indexOf(label) + 1;
           where = `sd_open_time = ${queryValue}`;
@@ -1780,7 +1798,13 @@ require([
           filter: {
             where
           },
-          excludedEffect: "blur(2px) opacity(0.2) grayscale(0.2)"
+          excludedEffect: "blur(2px) opacity(0) grayscale(0.2)"
+        };
+        layerCCTicketsView.featureEffect = {
+          filter: {
+            where
+          },
+          excludedEffect: "blur(2px) opacity(0) grayscale(0.2)"
         };
       }
     }
@@ -1820,7 +1844,7 @@ require([
     const chartDay = document.getElementById("chart-day");
     const chartWeek = document.getElementById("chart-week");
     const chartMonth = document.getElementById("chart-month");
-    // const dayChartBreakDownBlock = document.getElementById("chart-day");
+    const dayChartBreakDownBlock = document.getElementById("chart-day-distribution");
 
     // Show the corresponding chart when user clicks one of the three buttons
     chartChoiceControl?.addEventListener("calciteChipGroupSelect", (event) => {
@@ -1828,6 +1852,7 @@ require([
       for (let chart of charts) {
         changeBarColor(chart, previouslySelectedBarIndex, "#007AC2");
       }
+      layerCCTicketsView.featureEffect = undefined;
       layerView.featureEffect = undefined;
       previouslySelectedBarIndex = null;
       // dayChartBreakDownBlock.style.display = "none";
@@ -1905,7 +1930,7 @@ require([
         charts.push(chart);
         // add mouse-move event listener on the charts so that we can display features
         // corresponding to the selected by on the chart
-        canvasElement.addEventListener("click", async () => {
+        canvas2.addEventListener("click", async () => {
           const data = await applyFilterToTicketsData(event, chart);
         });
       }
@@ -1976,7 +2001,7 @@ require([
         charts.push(chart);
         // add mouse-move event listener on the charts so that we can display features
         // corresponding to the selected by on the chart
-        canvasElement.addEventListener("click", async () => {
+        canvas2.addEventListener("click", async () => {
           const data = await applyFilterToTicketsData(event, chart);
         });
       }
