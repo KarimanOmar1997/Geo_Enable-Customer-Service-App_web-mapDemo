@@ -1,0 +1,49 @@
+name: Refactor
+description: Propose a code rework that does not effect functionality
+labels: ["refactor", "0 - new", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        - Please [check for existing issues](https://github.com/Esri/calcite-design-system/issues) to avoid duplicates. If someone has already opened an issue for what you are experiencing, please add a 👍 reaction to the existing issue instead of creating a new one.
+        - For support, please check the [community forum](https://developers.arcgis.com/calcite-design-system/community/).
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to change?
+    validations:
+      required: true
+  - type: textarea
+    id: advantage
+    attributes:
+      label: Proposed Advantages
+      description: Why should the code change?
+    validations:
+      required: true
+  - type: textarea
+    id: component
+    attributes:
+      label: Which Component
+    validations:
+      required: true
+  - type: textarea
+    id: info
+    attributes:
+      label: Relevant Info
+      description: Dependencies, blockers, helpful details, etc.
+    validations:
+      required: false
+  - type: checkboxes
+    id: packages
+    attributes:
+      label: Calcite package
+      description: Select the relevant [package(s)](https://github.com/Esri/calcite-design-system/tree/main/packages) related to the request.
+      options:
+        - label: "@esri/calcite-components"
+        - label: "@esri/calcite-components-angular"
+        - label: "@esri/calcite-components-react"
+        - label: "@esri/calcite-design-tokens"
+        - label: "@esri/eslint-plugin-calcite-components"
+    validations:
+      required: false

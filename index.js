@@ -120,7 +120,35 @@ require([
     console.log("to get 9 :", map.layers.getItemAt(9).title);
     console.log("to get 10 :", map.layers.getItemAt(10).title);
     console.log("to get 11 :", map.layers.getItemAt(11).title);
-    // console.log("to get 9.2 :", map.layers.getItemAt(9).allLayers.getItemAt(1).title);
+    const Iraq = map.layers.getItemAt(0);
+    const Governerate = map.layers.getItemAt(1);
+    const NetworkArea = map.layers.getItemAt(2);
+    const CoveragebyRSRP_85_CoveragebyRSRP_44_85 = map.layers.getItemAt(3);
+    const NetworkCoverage = map.layers.getItemAt(4);
+    const Cells = map.layers.getItemAt(5);
+    const HPSMTickets = map.layers.getItemAt(6);
+    const sitesFinal = map.layers.getItemAt(7);
+    const RFIsFC = map.layers.getItemAt(8);
+    const CCTicketsFCExportFeatures = map.layers.getItemAt(9);
+    const Cell_Site_Data_Jammer_Sites = map.layers.getItemAt(10);
+    const FiberIssues_WFL1 = map.layers.getItemAt(11);
+
+    const featureLayerInterference = new FeatureLayer({
+      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Cell_Site_Data/FeatureServer/6"
+    });
+    
+    const featureLayerNMSIncident = new FeatureLayer({
+      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/NMS_Incident/FeatureServer/4"
+    });
+
+    const featureLayerMaintenanceSiteOperation = new FeatureLayer({
+      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/4"
+    });
+
+    const featureLayerOutagesData = new FeatureLayer({
+      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/5"
+    });
+
     const coverageStatusRenderer = {
       type: "unique-value",
       legendOptions: {
@@ -158,6 +186,7 @@ require([
       }
     ]
     };
+
     const maintentanceRenderer = {
       type: "unique-value",
       legendOptions: {
@@ -182,6 +211,7 @@ require([
         }
       }]
     };
+
     const outageRenderer = {
       type: "unique-value",
       legendOptions: {
@@ -206,6 +236,7 @@ require([
         }
       }]
     };
+
     const NumberOfTicketsRenderer ={
       type: "simple",
       symbol: {
@@ -225,22 +256,47 @@ require([
           ]
         }
       ]
-    }
+    };
+    
+    const NumberOutagesRenderer ={
+      type: "simple",
+      symbol: {
+        type: "simple-fill",
+        color: "#238443",
+        outline: null
+      },
+      // use opacity to visualize median household income
+      visualVariables: [
+        {
+          type: "color",
+          field: "number_of_outages",
+          stops: [
+            { value: 1, color: 'green', label: "1" },
+            { value: 50, color: 'orange', label: "50" },
+            { value: 100, color: 'red', label: "100" }
+          ]
+        }
+      ]
+    };
+
     document.getElementById("coverageStatusButton").addEventListener("click", function () {
-      map.layers.getItemAt(5).renderer = coverageStatusRenderer;
+      NetworkCoverage.renderer = coverageStatusRenderer;
     });
     document.getElementById("maintentanceButton").addEventListener("click", function () {
-      map.layers.getItemAt(5).renderer = maintentanceRenderer;
+      NetworkCoverage.renderer = maintentanceRenderer;
     });
     document.getElementById("outageButton").addEventListener("click", function () {
-      map.layers.getItemAt(5).renderer = outageRenderer;
+      NetworkCoverage.renderer = outageRenderer;
     });
     document.getElementById("NumberOfTicketsButton").addEventListener("click", function () {
-      map.layers.getItemAt(5).renderer = NumberOfTicketsRenderer;
+      NetworkCoverage.renderer = NumberOfTicketsRenderer;
+    });
+    document.getElementById("NumberOutagesRenderer").addEventListener("click", function () {
+      NetworkCoverage.renderer = NumberOutagesRenderer;
     });
     function gitTotalAllRFIAndCCTickets(){
-      map.layers.getItemAt(9).when(function() {
-        map.layers.getItemAt(9).queryFeatureCount().then(function(count){
+      RFIsFC.when(function() {
+        RFIsFC.queryFeatureCount().then(function(count){
           console.log("Total number of features:", count);
           // You can display this number wherever you want, for example:
           document.getElementById("totalRFI").innerText =  count;
@@ -248,8 +304,8 @@ require([
           console.error("Error getting feature count:", error);
         });
       });
-      map.layers.getItemAt(10).when(function() {
-        map.layers.getItemAt(10).queryFeatureCount().then(function(count){
+      CCTicketsFCExportFeatures.when(function() {
+        CCTicketsFCExportFeatures.queryFeatureCount().then(function(count){
           console.log("Total number of features:", count);
           // You can display this number wherever you want, for example:
           document.getElementById("totalCCTickets").innerText =  count;
@@ -260,7 +316,7 @@ require([
     }
     gitTotalAllRFIAndCCTickets()
     //  console.log("to get 10 :",map.layers.getItemAt(10).title);
-    map.layers.getItemAt(7).popupTemplate = {
+    sitesFinal.popupTemplate = {
       title: "{site_id}",
       outFields: ["*"],
       returnGeometry: true,
@@ -270,34 +326,17 @@ require([
           label: "Site ID:"
         },
         {
-          fieldName: "site_name",
-          label: "Site Name:"
-        },
-        {
-          fieldName: "total_no_customer",
-          label: "Total Customer:"
-        },
-        {
-          fieldName: "site_type",
-          label: "Site Type:"
+          fieldName: "ID",
+          label: "ID:"
         }
         ,
         {
-          fieldName: "maintenance",
-          label: "Maintenance:"
-        },
-        {
-          fieldName: "outages",
-          label: "Outages:"
-        }
-        ,
-        {
-          fieldName: "latitude",
+          fieldName: "plan_latitude",
           label: "Latitude:"
         }
         ,
         {
-          fieldName: "longitude",
+          fieldName: "plan_longitude",
           label: "Longitude:"
         }
       ],
@@ -340,7 +379,7 @@ require([
         },
       ]
     }
-    map.layers.getItemAt(6).popupTemplate = {
+    HPSMTickets.popupTemplate = {
       title: "{phone_number}",
       outFields: ["*"],
       returnGeometry: true,
@@ -515,103 +554,103 @@ require([
         },
       ]
     }
-    map.layers.getItemAt(5).popupTemplate = {
-      title: "{site_name}",
-      outFields: ["*"],
-      returnGeometry: true,
-      fieldInfos: [
-        {
-          fieldName: "site_id",
-          label: "Site ID:"
-        },
-        {
-          fieldName: "site_name",
-          label: "site name:"
-        },
-        {
-          fieldName: "latitude",
-          label: "latitude:"
-        },
-        {
-          fieldName: "longitude",
-          label: "latitude:"
-        },
-        {
-          fieldName: "covergae_area_id",
-          label: "covergae area id:"
-        },
-        {
-          fieldName: "coverage_status",
-          label: "coverage status:"
-        },
-        {
-          fieldName: "coverage_status_date_time",
-          label: "coverage status date time:"
-        },
-        {
-          fieldName: "coverage_location",
-          label: "coverage location:"
-        },
-        {
-          fieldName: "cgi",
-          label: "cgi:"
-        },
-        {
-          fieldName: "outage",
-          label: "outage:"
-        },
-        {
-          fieldName: "maintentance",
-          label: "maintentance:"
-        },
-        {
-          fieldName: "gov",
-          label: "gov:"
-        },
-        {
-          fieldName: "network_type",
-          label: "network type:"
-        },
-      ],
-      content: [
-        // Add FieldContent to popup template.
-        {
-          type: "fields"
-        },
-        // Create RelationshipContent with the relationship between
-        // the units and fires.
-        {
-          type: "relationship",
-          // The numeric ID value for the defined relationship on the service.
-          // This can be found on the service.
-          relationshipId: 2,
-          description: "",
-          // Display two related fire features in the list of related features.
-          displayCount: 1,
-          title: "Sites Data",
-          // Order the related features by the 'GIS_ACRES' in descending order.
-          orderByFields: {
-            field: "site_id",
-            order: "desc"
-          }
-        },
-        // // Create RelationshipContent with the relationship between
-        // // the units and wildfire protection facility statistics table.
-        {
-          type: "relationship",
-          relationshipId: 6,
-          description: "",
-          // Display only the one unit
-          displayCount: 1,
-          title: "CCTicketsFC Data",
-          // Order list of related records by the 'NAME' field in ascending order.
-          orderByFields: {
-            field: "siteid",
-            order: "asc"
-          }
-        },
-      ]
-    }
+    // map.layers.getItemAt(5).popupTemplate = {
+    //   title: "{site_name}",
+    //   outFields: ["*"],
+    //   returnGeometry: true,
+    //   fieldInfos: [
+    //     {
+    //       fieldName: "site_id",
+    //       label: "Site ID:"
+    //     },
+    //     {
+    //       fieldName: "site_name",
+    //       label: "site name:"
+    //     },
+    //     {
+    //       fieldName: "latitude",
+    //       label: "latitude:"
+    //     },
+    //     {
+    //       fieldName: "longitude",
+    //       label: "latitude:"
+    //     },
+    //     {
+    //       fieldName: "covergae_area_id",
+    //       label: "covergae area id:"
+    //     },
+    //     {
+    //       fieldName: "coverage_status",
+    //       label: "coverage status:"
+    //     },
+    //     {
+    //       fieldName: "coverage_status_date_time",
+    //       label: "coverage status date time:"
+    //     },
+    //     {
+    //       fieldName: "coverage_location",
+    //       label: "coverage location:"
+    //     },
+    //     {
+    //       fieldName: "cgi",
+    //       label: "cgi:"
+    //     },
+    //     {
+    //       fieldName: "outage",
+    //       label: "outage:"
+    //     },
+    //     {
+    //       fieldName: "maintentance",
+    //       label: "maintentance:"
+    //     },
+    //     {
+    //       fieldName: "gov",
+    //       label: "gov:"
+    //     },
+    //     {
+    //       fieldName: "network_type",
+    //       label: "network type:"
+    //     },
+    //   ],
+    //   content: [
+    //     // Add FieldContent to popup template.
+    //     {
+    //       type: "fields"
+    //     },
+    //     // Create RelationshipContent with the relationship between
+    //     // the units and fires.
+    //     {
+    //       type: "relationship",
+    //       // The numeric ID value for the defined relationship on the service.
+    //       // This can be found on the service.
+    //       relationshipId: 2,
+    //       description: "",
+    //       // Display two related fire features in the list of related features.
+    //       displayCount: 1,
+    //       title: "Sites Data",
+    //       // Order the related features by the 'GIS_ACRES' in descending order.
+    //       orderByFields: {
+    //         field: "site_id",
+    //         order: "desc"
+    //       }
+    //     },
+    //     // // Create RelationshipContent with the relationship between
+    //     // // the units and wildfire protection facility statistics table.
+    //     {
+    //       type: "relationship",
+    //       relationshipId: 6,
+    //       description: "",
+    //       // Display only the one unit
+    //       displayCount: 1,
+    //       title: "CCTicketsFC Data",
+    //       // Order list of related records by the 'NAME' field in ascending order.
+    //       orderByFields: {
+    //         field: "siteid",
+    //         order: "asc"
+    //       }
+    //     },
+    //   ]
+    // }
     // On view click, first remove all the previously added features (if any).
     reactiveUtils.on(
       () => view,
@@ -708,8 +747,9 @@ require([
       featureTableRFIsFC.highlightIds.removeAll();
       featureTableCCTickets.highlightIds.removeAll();
       featureTableJammerSites.highlightIds.removeAll();
-      featureTableTwors.highlightIds.removeAll();
+      featureTableSites.highlightIds.removeAll();
       featureTableNetworkCoverage.highlightIds.removeAll();
+      featureTableCells.highlightIds.removeAll();
       document.getElementById("Data_Container_By_Select").innerHTML = " "
       gitTotalAllRFIAndCCTickets()
       ChartRFIA(0 , "Affected_Service" , "chart-RFIAffected");
@@ -731,7 +771,7 @@ require([
       includeDefaultSources: false,
       sources: [
         {
-          layer: map.layers.getItemAt(7),
+          layer: sitesFinal,
           searchFields: ["site_id"],
           displayField: "site_id",
           exactMatch: false,
@@ -740,7 +780,7 @@ require([
           placeholder: "example: BAG0400"
         },
         {
-          layer: map.layers.getItemAt(6),
+          layer: HPSMTickets,
           searchFields: ["phone_number"],
           displayField: "phone_number",
           exactMatch: false,
@@ -893,35 +933,130 @@ require([
 
     typeSelect.addEventListener("change", async () => {
       const value = typeSelect.value;
-      const layer = map.layers.getItemAt(6);
-      const layerCCTicketsFC = map.layers.getItemAt(10);
-      await layer.load();
-      await layerCCTicketsFC.load();
+      // const layerHPSM = map.layers.getItemAt(6);
+      // const CCTicketsFCExportFeatures = map.layers.getItemAt(9);
+      await HPSMTickets.load();
+      await CCTicketsFCExportFeatures.load();
       // Create an array of layerViews to be able to highlight selected features.
-      if (layer.type === "feature") {
-        const layerView = await view.whenLayerView(layer);
+      if (HPSMTickets.type === "feature") {
+        // const layerView = await view.whenLayerView(layer);
 
-        layerView.filter =
+        HPSMTickets.definitionExpression =
           value === "all"
             ? null
-            : {
-              where: `sd_status = '${value}'`
-            };
+            : `sd_status = '${value}'`
+            
       }
-      if (layerCCTicketsFC.type === "feature") {
-        const layerViewCCTicketsFC = await view.whenLayerView(layerCCTicketsFC);
+      if (CCTicketsFCExportFeatures.type === "feature") {
+        // const layerViewCCTicketsFC = await view.whenLayerView(layerCCTicketsFC);
 
-        layerViewCCTicketsFC.filter =
+        CCTicketsFCExportFeatures.definitionExpression =
           value === "all"
             ? null
-            : {
-              where: `sd_status = '${value}'`
-            };
+            : `sd_status = '${value}'`
+            
       }
       // });
     });
 
+    const SearchInputAffectedService = document.getElementById("SearchInputAffectedService");
+    SearchInputAffectedService.addEventListener("change", async () => {
+      const value = SearchInputAffectedService.value;
+      console.log(value);
+      // const layer = map.layers.getItemAt(6);
+      await CCTicketsFCExportFeatures.load();
+      // Create an array of layerViews to be able to highlight selected features.
+      if (CCTicketsFCExportFeatures.type === "feature") {
+
+        CCTicketsFCExportFeatures.definitionExpression = value === ""
+          ? null
+          : `affected_service = '${value}'`
+
+      }
+    });
+
+    const SearchInputCCSubcategory = document.getElementById("SearchInputCCSubcategory");
+    SearchInputCCSubcategory.addEventListener("change", async () => {
+      const value = SearchInputCCSubcategory.value;
+      console.log(value);
+      // const layer = map.layers.getItemAt(6);
+      await CCTicketsFCExportFeatures.load();
+      // Create an array of layerViews to be able to highlight selected features.
+      if (CCTicketsFCExportFeatures.type === "feature") {
+
+        CCTicketsFCExportFeatures.definitionExpression = value === ""
+          ? null
+          : `subcategory = '${value}'`
+
+      }
+    });
+
+    const SearchInputCCArea = document.getElementById("SearchInputCCArea");
+    SearchInputCCArea.addEventListener("change", async () => {
+      const value = SearchInputCCArea.value;
+      console.log(value);
+      // const layer = map.layers.getItemAt(6);
+      await CCTicketsFCExportFeatures.load();
+      // Create an array of layerViews to be able to highlight selected features.
+      if (CCTicketsFCExportFeatures.type === "feature") {
+
+        CCTicketsFCExportFeatures.definitionExpression = value === ""
+          ? null
+          : `area = '${value}'`
+
+      }
+    });
+
+    const SearchInputProductType = document.getElementById("SearchInputProductType");
+    SearchInputProductType.addEventListener("change", async () => {
+      const value = SearchInputProductType.value;
+      console.log(value);
+      // const layer = map.layers.getItemAt(6);
+      await RFIsFC.load();
+      // Create an array of layerViews to be able to highlight selected features.
+      if (RFIsFC.type === "feature") {
+
+        RFIsFC.definitionExpression = value === ""
+          ? null
+          : `PRODUCT_TYPE = '${value}'`
+
+      }
+    });
+
+    const SearchInputRFIsSubcategory = document.getElementById("SearchInputRFIsSubcategory");
+    SearchInputRFIsSubcategory.addEventListener("change", async () => {
+      const value = SearchInputRFIsSubcategory.value;
+      console.log(value);
+      // const layer = map.layers.getItemAt(6);
+      await RFIsFC.load();
+      // Create an array of layerViews to be able to highlight selected features.
+      if (RFIsFC.type === "feature") {
+
+        RFIsFC.definitionExpression = value === ""
+          ? null
+          : `SUBCATEGORY = '${value}'`
+
+      }
+    });
+
+    const SearchInputRFIsArea = document.getElementById("SearchInputRFIsArea");
+    SearchInputRFIsArea.addEventListener("change", async () => {
+      const value = SearchInputRFIsArea.value;
+      console.log(value);
+      // const layer = map.layers.getItemAt(6);
+      await RFIsFC.load();
+      // Create an array of layerViews to be able to highlight selected features.
+      if (RFIsFC.type === "feature") {
+
+        RFIsFC.definitionExpression = value === ""
+          ? null
+          : `User_Location = '${value}'`
+
+      }
+    });
+
     document.getElementById("SearchBTN").addEventListener("click", searchOnMap);
+
     function searchOnMap() {
       var addressVar = document.getElementById("SearchInput").value
       // console.log(addressVar);
@@ -1020,12 +1155,6 @@ require([
         console.error("Error during query: ", error);
       });
     }
-    var MaintenanceSiteOperationFeatureLayer = new FeatureLayer({
-      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/4"
-    });
-    var OutagesDataFeatureLayer = new FeatureLayer({
-      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/5"
-    });
 
     // Define the query parameters
     function getSitesFeatureLayer(site_id, caller) {
@@ -1106,8 +1235,7 @@ require([
              `
                 // console.log("site",element.attributes);
               }
-            })
-            .catch(function (error) {
+            }).catch(function (error) {
               // Handle errors
               console.error("Error performing query:", error);
             });
@@ -1154,7 +1282,7 @@ require([
         ChartCCTickets(site_id ,"area" , "chart-CCTicketsArea");
 
 
-        MaintenanceSiteOperationFeatureLayer.queryFeatures(queryParams)
+        featureLayerMaintenanceSiteOperation.queryFeatures(queryParams)
           .then(function (result) {
 
             // Handle the query result
@@ -1211,14 +1339,12 @@ require([
               // console.log("MaintenanceSiteOperation",element.attributes);
             }
 
-          })
-          .catch(function (error) {
+          }).catch(function (error) {
             // Handle errors
             console.error("Error performing query:", error);
           });
-
         // Execute the query
-        OutagesDataFeatureLayer.queryFeatures(queryParams)
+        featureLayerOutagesData.queryFeatures(queryParams)
           .then(function (result) {
             // Handle the query result
             document.getElementById(caller == "search" ? "Data_Container_By_Search" : "Data_Container_By_Select").innerHTML += `
@@ -1361,12 +1487,10 @@ require([
            `
               // console.log("OutagesData",element.attributes);
             }
-          })
-          .catch(function (error) {
+          }).catch(function (error) {
             // Handle errors
             console.error("Error performing query:", error);
           });
-
           CCTicketsFCExportFeaturesFeatureLayer.queryFeatures(queryParamsRFIAndCCTickets)
           .then(function (result) {
          // Check if features are available
@@ -1420,16 +1544,16 @@ require([
 
     // ========================================charts==============================================
 
-    const layer = map.layers.getItemAt(6);
-    const layerRFI = map.layers.getItemAt(9)
-    const layerCCTickets = map.layers.getItemAt(10)
+    const layerHPSM = map.layers.getItemAt(6);
+    // const layerRFI = map.layers.getItemAt(8)
+    const layerCCTickets = map.layers.getItemAt(9)
 
     // console.log(layer);
-    await layer.load();
-    await layerRFI.load();
+    await layerHPSM.load();
+    await RFIsFC.load();
     await layerCCTickets.load();
-    let layerView = await view.whenLayerView(layer);
-    let layerRFIView = await view.whenLayerView(layerRFI);
+    let layerViewHPSM = await view.whenLayerView(layerHPSM);
+    // let layerRFIView = await view.whenLayerView(RFIsFC);
     let layerCCTicketsView = await view.whenLayerView(layerCCTickets);
 
 
@@ -1558,7 +1682,7 @@ require([
     // count stats for Tickets 1. by time of day 2. by day of week and 3. by month
     async function runQuery(where, groupStats) {
       // create a query object that honors the layer settings
-      let query = layer.createQuery();
+      let query = layerHPSM.createQuery();
       query.where = where;
       query.outStatistics = [
         {
@@ -1569,12 +1693,12 @@ require([
       ];
       query.groupByFieldsForStatistics = [groupStats];
       query.orderByFields = [groupStats];
-      let result = await layer.queryFeatures(query);
+      let result = await layerHPSM.queryFeatures(query);
       return result;
     }
     async function runRFIQuery(cgi, groupStats) {
       // create a query object that honors the layer settings
-      let query = layerRFI.createQuery();
+      let query = RFIsFC.createQuery();
       const currentDate = new Date();
 
       // Calculate date and time 24 hours ago
@@ -1597,7 +1721,7 @@ require([
       query.orderByFields = [groupStats];
 
       
-      let result = await layerRFI.queryFeatures(query);
+      let result = await RFIsFC.queryFeatures(query);
 
       const top1Subcategories = result.features.slice(0, 10)
       console.log("top1Subcategories",top1Subcategories);
@@ -1611,7 +1735,7 @@ require([
         orderByFields: "Creation_Date_Time DESC",
         // resultRecordCount: 1,
       };
-      let resultQuery = await layerRFI.queryFeatures(queryParams);
+      let resultQuery = await RFIsFC.queryFeatures(queryParams);
       const top10features = resultQuery.features.slice(0, 10)
 
       const subcategoryCounts = {};
@@ -1743,7 +1867,7 @@ require([
         // clear the feature effect and reset the previous index
         if (previouslySelectedBarIndex === idx) {
           previouslySelectedBarIndex = null;
-          layerView.featureEffect = undefined;
+          layerViewHPSM.featureEffect = undefined;
           layerCCTicketsView.featureEffect = undefined;
 
           if (dayDistributionChart) {
@@ -1794,7 +1918,7 @@ require([
           const title = "Tickets by hours on " + label;
           dayDistributionStats(where, "extract(hour from sd_open_time)", title);
         }
-        layerView.featureEffect = {
+        layerViewHPSM.featureEffect = {
           filter: {
             where
           },
@@ -1853,7 +1977,7 @@ require([
         changeBarColor(chart, previouslySelectedBarIndex, "#007AC2");
       }
       layerCCTicketsView.featureEffect = undefined;
-      layerView.featureEffect = undefined;
+      layerViewHPSM.featureEffect = undefined;
       previouslySelectedBarIndex = null;
       // dayChartBreakDownBlock.style.display = "none";
       chartDay.style.display = "none";
@@ -2010,52 +2134,12 @@ require([
     }
 
 
-    function createSymbol(color) {
-      return {
-        type: "simple-marker",
-        color: color,
-        size: "5px",
-        outline: null,
-        outline: {
-          color: "rgba(153, 31, 23, 0.3)",
-          width: 0.3
-        }
-      };
-    }
-
-
     // =========================================================== tables ========================================
 
-    const featureLayerTwors = map.layers.getItemAt(7); // Grabs the first layer in the map
-    const featureLayerHPSMTickets = map.layers.getItemAt(6); // Grabs the first layer in the map
-    const featureLayerNetworkCoverage = map.layers.getItemAt(5); // Grabs the first layer in the map
-    const featureLayerRFIsFC = map.layers.getItemAt(9); // Grabs the first layer in the map
-    const featureLayerCCTicketsFCExportFeatures = map.layers.getItemAt(10); // Grabs the first layer in the map
-    const featureLayerJammerSites = map.layers.getItemAt(11); // Grabs the first layer in the map
-    const featureLayerMaintenanceSiteOperation = new FeatureLayer({
-      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/4"
-    });
-    const featureLayerOutagesData = new FeatureLayer({
-      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Asia_Cell_V4/FeatureServer/5"
-    });
-    const featureLayerInterference = new FeatureLayer({
-      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/Cell_Site_Data/FeatureServer/6"
-    });
-    const featureLayerNMSIncident = new FeatureLayer({
-      url: "https://services3.arcgis.com/N0l9vjYH8GLn5HZh/arcgis/rest/services/NMS_Incident/FeatureServer/4"
-    });
-    // featureLayerTwors.title = "Sites";
-    // featureLayerHPSMTickets.title = "HPSM Tickets";
-    // featureLayerMaintenanceSiteOperation.title = "Maintenance Site Operation";
-    // featureLayerOutagesData.title = "OutagesData";
-    // featureLayerNetworkCoverage.title = "Network Coverage";
-    // featureLayerRFIsFC.title = "RFIs FC";
-    // featureLayerCCTicketsFCExportFeatures.title = "CCTicketsFC ExportFeatures";
-
     // Create the feature table
-    const featureTableTwors = new FeatureTable({
+    const featureTableSites = new FeatureTable({
       view: view, // Required for feature highlight to work
-      layer: featureLayerTwors,
+      layer: sitesFinal,
       visibleElements: {
         // Autocast to VisibleElements
         menuItems: {
@@ -2067,93 +2151,13 @@ require([
           zoomToSelection: true
         }
       },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "site_id",
-            label: "Site ID",
-           
-          },
-          {
-            type: "field",
-            fieldName: "site_name",
-            label: "Site Name"
-          },
-          // {
-          //   type: "field",
-          //   fieldName: "latitude",
-          //   label: "Latitude"
-          // },
-          // {
-          //   type: "field",
-          //   fieldName: "longitude",
-          //   label: "Longitude"
-          // },
-          {
-            type: "field",
-            fieldName: "total_no_customer",
-            label: "total_no_customer"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "site_type",
-            label: "Site type"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "maintenance",
-            label: "maintenance"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "outages",
-            label: "outages"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "gov",
-            label: "gov"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "MaintenanceSiteOperation",
-            label: "MaintenanceSiteOperation"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "OutagesData",
-            label: "OutagesData"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Sites_Buffer3",
-            label: "Sites_Buffer3"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "CCTicketsFC",
-            label: "CCTicketsFC"
-          }
-        ]
-      },
-      container: document.getElementById("tableDiv-Towers")
+
+      container: document.getElementById("tableDiv-Sites")
     });
 
     const featureTableHPSMTickets = new FeatureTable({
       view: view, // Required for feature highlight to work
-      layer: featureLayerHPSMTickets,
+      layer: HPSMTickets,
       visibleElements: {
         // Autocast to VisibleElements
         menuItems: {
@@ -2164,171 +2168,6 @@ require([
           selectedRecordsShowSelectedToggle: true,
           zoomToSelection: true
         }
-      },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "im_id",
-            label: "im_id",
-           
-          },
-          {
-            type: "field",
-            fieldName: "phone_number",
-            label: "phone_number"
-          },
-          {
-            type: "field",
-            fieldName: "sd_id",
-            label: "sd_id"
-          },
-          {
-            type: "field",
-            fieldName: "sd_open_time",
-            label: "sd_open_time"
-          },
-          {
-            type: "field",
-            fieldName: "sd_opened_by",
-            label: "sd_opened_by"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sd",
-            label: "sd"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sd_status",
-            label: "sd_status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "area",
-            label: "area"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "subcategory",
-            label: "subcategory"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sd_close_time",
-            label: "sd_close_time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sd_resolution_time",
-            label: "sd_resolution_time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "general_outage",
-            label: "general_outage"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sla_status",
-            label: "sla_status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "affected_service",
-            label: "affected_service"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "gouvernorate",
-            label: "gouvernorate"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolution",
-            label: "resolution"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolution_code",
-            label: "resolution_code"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cell_id",
-            label: "cell_id"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cell_name",
-            label: "cell_name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "siteid",
-            label: "siteid"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "customer_segment",
-            label: "customer_segment"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sitename",
-            label: "sitename"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "reopened",
-            label: "reopened"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolved_by",
-            label: "resolved_by"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "region",
-            label: "region"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolved_by",
-            label: "resolved_by"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "expected_resolution_date",
-            label: "expected_resolution_date"
-          }
-        ]
       },
       container: document.getElementById("tableDiv-HPSMTickets")
     });
@@ -2347,51 +2186,7 @@ require([
           zoomToSelection: true
         }
       },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "operation_id",
-            label: "operation_id",
-            
-          },
-          {
-            type: "field",
-            fieldName: "operation_name",
-            label: "operation_name"
-          },
-          {
-            type: "field",
-            fieldName: "operation_category",
-            label: "operation_category"
-          },
-          {
-            type: "field",
-            fieldName: "peration_date",
-            label: "peration_date"
-          },
-          {
-            type: "field",
-            fieldName: "site_id",
-            label: "site_id"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "status",
-            label: "status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cell_id",
-            label: "cell_id"
-          }
-        ]
-      },
+
       container: document.getElementById("tableDiv-MaintenanceSiteOperation")
     });
 
@@ -2409,177 +2204,13 @@ require([
           zoomToSelection: true
         }
       },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "incident_id",
-            label: "incident_id",
-            
-          },
-          {
-            type: "field",
-            fieldName: "status",
-            label: "status"
-          },
-          {
-            type: "field",
-            fieldName: "kpi_category",
-            label: "kpi_category"
-          },
-          {
-            type: "field",
-            fieldName: "kpi_subcategory",
-            label: "kpi_subcategory"
-          },
-          {
-            type: "field",
-            fieldName: "assignment",
-            label: "assignment"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cluster",
-            label: "cluster"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "element",
-            label: "element"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "province_city",
-            label: "province_city"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "ne_name",
-            label: "ne_name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "affectedobject",
-            label: "affectedobject"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "site_id",
-            label: "site_id"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "site_name",
-            label: "site_name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "original_event_time",
-            label: "original_event_time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "clearance_time",
-            label: "clearance_time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "close_time",
-            label: "close_time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "duration",
-            label: "duration"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "open_time",
-            label: "open_time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "alarm_number",
-            label: "alarm_number"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "alarm_severity",
-            label: "alarm_severity"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "affected_sector",
-            label: "affected_sector"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "problem_category",
-            label: "problem_category"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "reason",
-            label: "reason"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "service_affected",
-            label: "service_affected"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolution_code",
-            label: "resolution_code"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "notification_id",
-            label: "notification_id"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolution",
-            label: "resolution"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "update_time",
-            label: "update_time"
-          }
-        ]
-      },
+
       container: document.getElementById("tableDiv-OutagesData")
     });
 
     const featureTableNetworkCoverage = new FeatureTable({
       view: view, // Required for feature highlight to work
-      layer: featureLayerNetworkCoverage,
+      layer: NetworkCoverage,
       visibleElements: {
         // Autocast to VisibleElements
         menuItems: {
@@ -2592,92 +2223,13 @@ require([
           zoomToSelection: true
         }
       },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "site_id",
-            label: "Site ID",
-            
-          },
-          {
-            type: "field",
-            fieldName: "site_name",
-            label: "Site Name"
-          },
-          {
-            type: "field",
-            fieldName: "total_no_customer",
-            label: "Total No Customer"
-          },
-          {
-            type: "field",
-            fieldName: "site_type",
-            label: "Site Type"
-          },
-          {
-            type: "field",
-            fieldName: "covergae_area_id",
-            label: "Covergae Area ID"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "coverage_status",
-            label: "Coverage Status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "coverage_status_date_time",
-            label: "Coverage Status Date Time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "coverage_location",
-            label: "Coverage Location"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cgi",
-            label: "CGI"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "outage",
-            label: "Outage"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "maintentance",
-            label: "Maintentance"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "network_type",
-            label: "Network Type"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "gov",
-            label: "GOV"
-          }
-        ]
-      },
+
       container: document.getElementById("tableDiv-NetworkCoverage")
     });
+
     const featureTableRFIsFC = new FeatureTable({
       view: view, // Required for feature highlight to work
-      layer: featureLayerRFIsFC,
+      layer: RFIsFC,
       visibleElements: {
         // Autocast to VisibleElements
         menuItems: {
@@ -2689,147 +2241,13 @@ require([
           zoomToSelection: true
         }
       },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "Interaction_ID",
-            label: "Interaction ID",
-            
-          },
-          {
-            type: "field",
-            fieldName: "Category",
-            label: "Category"
-          },
-          {
-            type: "field",
-            fieldName: "Affected_Service",
-            label: "Affected Service"
-          },
-          {
-            type: "field",
-            fieldName: "User_ID",
-            label: "User ID"
-          },
-          {
-            type: "field",
-            fieldName: "User_Name",
-            label: "User Name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "User_Location",
-            label: "User Location"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Creation_Date_Time",
-            label: "Creation Date Time",
-            direction: "desc"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Balance",
-            label: "Balance"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Customer_Plan",
-            label: "Customer Plan"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Customer_Segment",
-            label: "Customer Segment"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Ticket_Status",
-            label: "Ticket Status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Service_Recipient_MSISDN",
-            label: "Service Recipient MSISDN"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Contact_MSISDN",
-            label: "Contact MSISDN"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Approval_Status",
-            label: "Approval Status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Closure_Code",
-            label: "Closure Code"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "PRODUCT_TYPE",
-            label: "PRODUCT TYPE"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "CMC",
-            label: "CMC"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "CMC_Waiting",
-            label: "CMC Waiting"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "ASIA_CMC_ID",
-            label: "ASIA CMC ID"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "SUBCATEGORY",
-            label: "SUBCATEGORY"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "RATE_PLAN",
-            label: "RATE PLAN"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "AUTO_GOVERNORATE",
-            label: "AUTO GOVERNORATE"
-          }
-        ]
-      },
+
       container: document.getElementById("tableDiv-RFIsFC")
     });
+
     const featureTableCCTickets = new FeatureTable({
       view: view, // Required for feature highlight to work
-      layer: featureLayerCCTicketsFCExportFeatures,
+      layer: CCTicketsFCExportFeatures,
       visibleElements: {
         // Autocast to VisibleElements
         menuItems: {
@@ -2841,297 +2259,13 @@ require([
           zoomToSelection: true
         }
       },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "im_id",
-            label: "IM ID",
-           
-          },
-          {
-            type: "field",
-            fieldName: "sd_id",
-            label: "SD ID"
-          },
-          {
-            type: "field",
-            fieldName: "im_group",
-            label: "IM Group"
-          },
-          {
-            type: "field",
-            fieldName: "sd_open_time",
-            label: "SD Open Time",
-            direction: "desc"
-          },
-          {
-            type: "field",
-            fieldName: "sd_opened_by",
-            label: "SD Opened By"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sd",
-            label: "SD"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "im_opened_by",
-            label: "IM Opened By"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sd_status",
-            label: "SD Status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "im__status",
-            label: "IM Status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "im_open_time",
-            label: "IM Open Time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "area",
-            label: "Area"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "subcategory",
-            label: "Subcategory"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sd_close_time",
-            label: "SD Close Time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sd_resolution_time",
-            label: "SD Resolution Time"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cc_slt",
-            label: "CC SLT"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cemu_ola_status",
-            label: "Cemu Ola Status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "general_outage",
-            label: "General Outage"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sla_status",
-            label: "Sla Status"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "affected_service",
-            label: "Affected Service"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "gouvernorate",
-            label: "Gouvernorate"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolution",
-            label: "Resolution"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "asia_bscs_rate_plan",
-            label: "Asia Bscs Rate Plan"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "asia_bscs_balance",
-            label: "Asia Bscs Balance"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolution_code",
-            label: "Resolution Code"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "category",
-            label: "Category"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "description",
-            label: "Description"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cemu_comment",
-            label: "Cemu Comment"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "escalate_ticket",
-            label: "Escalate Ticket"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "contact_msisdn",
-            label: "Contact Msisdn"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cell_id",
-            label: "Cell ID"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "msisdn",
-            label: "Msisdn"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cell_name",
-            label: "Cell Name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "siteid",
-            label: "Site ID"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "customer_segment",
-            label: "Customer Segment"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "sitename",
-            label: "Site Name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cmc",
-            label: "CMC"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "reopened",
-            label: "Reopened"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cmc_waiting",
-            label: "CMC Waiting"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cmc_id",
-            label: "CMC ID"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "closed_by_id",
-            label: "Closed By ID"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "region",
-            label: "Region"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "resolved_by",
-            label: "Resolved By"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "expected_resolution_date",
-            label: "Expected Resolution Date"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "auto_governorate",
-            label: "Auto Governorate"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "channel",
-            label: "Channel"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "phone_number",
-            label: "Phone Number"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "cgi",
-            label: "CGI"
-          }
-        ]
-      },
+
       container: document.getElementById("tableDiv-CCTicketsFC")
     });
+
     const featureTableJammerSites = new FeatureTable({
       view: view, // Required for feature highlight to work
-      layer: featureLayerJammerSites,
+      layer: Cell_Site_Data_Jammer_Sites,
       visibleElements: {
         // Autocast to VisibleElements
         menuItems: {
@@ -3143,40 +2277,10 @@ require([
           zoomToSelection: true
         }
       },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "Site_ID",
-            label: "Site ID",
-           
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Full_Site_Name",
-            label: "Full Site Name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Longitude",
-            label: "Longitude"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Latitude",
-            label: "Latitude"
-          }
- 
-        ]
-      },
+
       container: document.getElementById("tableDiv-JammerSites")
     });
+
     const featureTableInterference = new FeatureTable({
       view: view, // Required for feature highlight to work
       layer: featureLayerInterference,
@@ -3191,64 +2295,10 @@ require([
           zoomToSelection: true
         }
       },
-      tableTemplate: {
-        // Autocast to TableTemplate
-        columnTemplates: [
-          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-          {
-            // Autocast to FieldColumnTemplate.
-            type: "field",
-            fieldName: "Date",
-            label: "Date",
-           
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Cell_FDD_TDD_Indication",
-            label: "Cell FDD TDD Indication"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "eNodeB_Name",
-            label: "eNodeB Name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Cell_Name",
-            label: "Cell Name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "eNodeB_Function_Name",
-            label: "eNodeB Function Name"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "LocalCell_Id",
-            label: "LocalCell ID"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "Integrity",
-            label: "Integrity"
-          }
-          ,
-          {
-            type: "field",
-            fieldName: "LULInterferenceAvg_dBm_",
-            label: "LULInterferenceAvg dBm"
-          }
- 
-        ]
-      },
+
       container: document.getElementById("tableDiv-Interference")
     });
+
     const featureTableNMSIncident = new FeatureTable({
       view: view, // Required for feature highlight to work
       layer: featureLayerNMSIncident,
@@ -3263,63 +2313,26 @@ require([
           zoomToSelection: true
         }
       },
-      // tableTemplate: {
-      //   // Autocast to TableTemplate
-      //   columnTemplates: [
-      //     // Takes an array of FieldColumnTemplate and GroupColumnTemplate
-      //     {
-      //       // Autocast to FieldColumnTemplate.
-      //       type: "field",
-      //       fieldName: "NUMBER_",
-      //       label: "NUMBER",
-           
-      //     }
-      //     ,
-      //     {
-      //       type: "field",
-      //       fieldName: "CATEGORY",
-      //       label: "CATEGORY"
-      //     }
-      //     ,
-      //     {
-      //       type: "field",
-      //       fieldName: "OPEN_TIME",
-      //       label: "OPEN TIME"
-      //     }
-      //     ,
-      //     {
-      //       type: "field",
-      //       fieldName: "OPENED_BY",
-      //       label: "OPENED BY"
-      //     }
-      //     ,
-      //     {
-      //       type: "field",
-      //       fieldName: "PRIORITY_CODE",
-      //       label: "PRIORITY CODE"
-      //     }
-      //     ,
-      //     {
-      //       type: "field",
-      //       fieldName: "SEVERITY",
-      //       label: "SEVERITY"
-      //     }
-      //     ,
-      //     {
-      //       type: "field",
-      //       fieldName: "Integrity",
-      //       label: "Integrity"
-      //     }
-      //     ,
-      //     {
-      //       type: "field",
-      //       fieldName: "LULInterferenceAvg_dBm_",
-      //       label: "LULInterferenceAvg dBm"
-      //     }
- 
-      //   ]
-      // },
+
       container: document.getElementById("tableDiv-NMSIncident")
+    });
+
+    const featureTableCells = new FeatureTable({
+      view: view, // Required for feature highlight to work
+      layer: Cells,
+      visibleElements: {
+        // Autocast to VisibleElements
+        menuItems: {
+          clearSelection: true,
+          refreshData: true,
+          toggleColumns: true,
+          selectedRecordsShowAllToggle: true,
+          selectedRecordsShowSelectedToggle: true,
+          zoomToSelection: true
+        }
+      },
+   
+      container: document.getElementById("tableDiv-Cells")
     });
 
     // Listen for when the view is stationary.
@@ -3330,12 +2343,13 @@ require([
       () => view.stationary,
       () => {
         // Filter out and show only the visible features in the feature table.
-        featureTableTwors.filterGeometry = view.extent;
+        featureTableSites.filterGeometry = view.extent;
         featureTableHPSMTickets.filterGeometry = view.extent;
         featureTableNetworkCoverage.filterGeometry = view.extent;
         featureTableRFIsFC.filterGeometry = view.extent;
         featureTableCCTickets.filterGeometry = view.extent;
         featureTableJammerSites.filterGeometry = view.extent;
+        featureTableCells.filterGeometry = view.extent;
       },
       {
         initial: true
@@ -3348,11 +2362,12 @@ require([
       const response = await view.hitTest(event);
       handles.removeAll();
       featureTableHPSMTickets.highlightIds.removeAll();
-      featureTableTwors.highlightIds.removeAll();
+      featureTableSites.highlightIds.removeAll();
       featureTableNetworkCoverage.highlightIds.removeAll();
       featureTableRFIsFC.highlightIds.removeAll();
       featureTableCCTickets.highlightIds.removeAll();
       featureTableJammerSites.highlightIds.removeAll();
+      featureTableCells.highlightIds.removeAll();
       gitTotalAllRFIAndCCTickets()
       ChartRFIA(0 , "Affected_Service" , "chart-RFIAffected");
       ChartRFIA(0 ,"SUBCATEGORY" , "chart-RFISubcategory");
@@ -3361,75 +2376,90 @@ require([
       ChartCCTickets(0 ,"subcategory" , "chart-CCTicketsSubcategory");
       ChartCCTickets(0 ,"area" , "chart-CCTicketsArea");
       candidate = response.results.find((result) => {
-        if (result.graphic.layer === featureLayerTwors) {
+        if (result.graphic.layer === sitesFinal) {
           return result.graphic &&
             result.graphic.layer &&
-            result.graphic.layer === featureLayerTwors
+            result.graphic.layer === sitesFinal
         }
-        else if (result.graphic.layer === featureLayerHPSMTickets) {
+        else if (result.graphic.layer === HPSMTickets) {
           return result.graphic &&
             result.graphic.layer &&
-            result.graphic.layer === featureLayerHPSMTickets
+            result.graphic.layer === HPSMTickets
 
         }
-        else if (result.graphic.layer === featureLayerRFIsFC) {
+        else if (result.graphic.layer === RFIsFC) {
           return result.graphic &&
             result.graphic.layer &&
-            result.graphic.layer === featureLayerRFIsFC
+            result.graphic.layer === RFIsFC
 
         }
-        else if (result.graphic.layer === featureLayerJammerSites) {
+        else if (result.graphic.layer === Cell_Site_Data_Jammer_Sites) {
           return result.graphic &&
             result.graphic.layer &&
-            result.graphic.layer === featureLayerJammerSites
+            result.graphic.layer === Cell_Site_Data_Jammer_Sites
 
         }
-        else if (result.graphic.layer === map.layers.getItemAt(5)) {
+        else if (result.graphic.layer === NetworkCoverage) {
           return result.graphic &&
             result.graphic.layer &&
-            result.graphic.layer === map.layers.getItemAt(5)
+            result.graphic.layer === NetworkCoverage
 
         }
-
-        else if (result.graphic.layer === map.layers.getItemAt(3)) {
+        else if (result.graphic.layer === CCTicketsFCExportFeatures) {
           return result.graphic &&
             result.graphic.layer &&
-            result.graphic.layer === map.layers.getItemAt(3)
+            result.graphic.layer === CCTicketsFCExportFeatures
 
         }
-        else if (result.graphic.layer === map.layers.getItemAt(2)) {
+        else if (result.graphic.layer === Cells) {
           return result.graphic &&
             result.graphic.layer &&
-            result.graphic.layer === map.layers.getItemAt(2)
+            result.graphic.layer === Cells
 
         }
-        else if (result.graphic.layer === map.layers.getItemAt(1)) {
+        else if (result.graphic.layer === FiberIssues_WFL1) {
           return result.graphic &&
             result.graphic.layer &&
-            result.graphic.layer === map.layers.getItemAt(1)
+            result.graphic.layer === FiberIssues_WFL1
 
         }
 
+        else if (result.graphic.layer === CoveragebyRSRP_85_CoveragebyRSRP_44_85) {
+          return result.graphic &&
+            result.graphic.layer &&
+            result.graphic.layer === CoveragebyRSRP_85_CoveragebyRSRP_44_85
 
+        }
+        else if (result.graphic.layer === NetworkArea) {
+          return result.graphic &&
+            result.graphic.layer &&
+            result.graphic.layer === NetworkArea
 
+        }
+        else if (result.graphic.layer === Governerate) {
+          return result.graphic &&
+            result.graphic.layer &&
+            result.graphic.layer === Governerate
+
+        }
 
       });
 
       // Add the graphic's ObjectId into the collection of highlightIds.
-      // Check that the featureTableTwors.highlightIds collection
+      // Check that the featureTableSites.highlightIds collection
       // does not include an already highlighted feature.
       if (candidate) {
         console.log("candidate.graphic : ", candidate.layer.title);
         const objectId = candidate.graphic.getObjectId();
-        if (candidate.layer.title == "Sites") {
+        if (candidate.layer.title == "sitesfinal") {
 
-          if (featureTableTwors.highlightIds.includes(objectId)) {
+          if (featureTableSites.highlightIds.includes(objectId)) {
             // Remove feature from current selection if feature
             // is already added to highlightIds collection
-            featureTableTwors.highlightIds.remove(objectId);
+            featureTableSites.highlightIds.remove(objectId);
           } else {
-            featureTableTwors.highlightIds.add(objectId);
-            // Add this feature to the featureTableTwors highlightIds collection
+            featureTableSites.highlightIds.add(objectId);
+            // Add this feature to the featureTableSites highlightIds collection
           }
         }
         else if (candidate.layer.title == "HPSM Tickets") {
@@ -3442,6 +2472,18 @@ require([
           } else {
             // Add this feature to the featureTableHPSMTickets highlightIds collection
             featureTableHPSMTickets.highlightIds.add(objectId);
+          }
+        }
+        else if (candidate.layer.title == "Cell") {
+
+
+          if (featureTableCells.highlightIds.includes(objectId)) {
+            // Remove feature from current selection if feature
+            // is already added to highlightIds collection
+            featureTableCells.highlightIds.remove(objectId);
+          } else {
+            // Add this feature to the featureTableHPSMTickets highlightIds collection
+            featureTableCells.highlightIds.add(objectId);
           }
         }
         else if (candidate.layer.title == "Network Coverage") {
@@ -3468,7 +2510,7 @@ require([
             featureTableRFIsFC.highlightIds.add(objectId);
           }
         }
-        else if (candidate.layer.title == "CC Tickets") {
+        else if (candidate.layer.title == "CCTicketsFC ExportFeatures") {
 
 
           if (featureTableCCTickets.highlightIds.includes(objectId)) {
@@ -3519,34 +2561,42 @@ require([
             });
           }
         }
+        else if (candidate.layer.title == "FiberIssues_WFL1") {
+          if (candidate.graphic.layer.type === "feature") {
+            layerViews.forEach((layerView) => {
+              if (candidate.graphic.layer.title === layerView.layer.title) {
+                handles.add(layerView.highlight(candidate.graphic));
+              }
+            });
+          }
+        }
       }
     });
 
-    // Watch the featureTableTwors's highlightIds.length property,
+    // Watch the featureTableSites's highlightIds.length property,
     // and get the count of highlighted features within
     // the table.
 
     reactiveUtils.watch(
-      () => featureTableTwors.highlightIds.length,
+      () => featureTableSites.highlightIds.length,
       (highlightIdsCount) => {
         // Iterate through the filters within the table.
         // If the active filter is "Show selection",
         // changes made to highlightIds (adding/removing)
         // are reflected.
 
-        featureTableTwors.viewModel.activeFilters.forEach((filter) => {
+        featureTableSites.viewModel.activeFilters.forEach((filter) => {
           if (filter.type === "selection") {
             selectionIdCount = filter.objectIds.length; // the filtered selection's id count
             // Check that the filter selection count is equal to the
             // highlightIds collection count. If not, update filter selection.
             if (selectionIdCount !== highlightIdsCount) {
-              featureTableTwors.filterBySelection();
+              featureTableSites.filterBySelection();
             }
           }
         });
       }
     );
-
     reactiveUtils.watch(
       () => featureTableNetworkCoverage.highlightIds.length,
       (highlightIdsCount) => {
@@ -3627,7 +2677,6 @@ require([
         });
       }
     );
-
     reactiveUtils.watch(
       () => featureTableHPSMTickets.highlightIds.length,
       (highlightIdsCount) => {
@@ -3643,6 +2692,26 @@ require([
             // highlightIds collection count. If not, update filter selection.
             if (selectionIdCount !== highlightIdsCount) {
               featureTableHPSMTickets.filterBySelection();
+            }
+          }
+        });
+      }
+    );
+    reactiveUtils.watch(
+      () => featureTableCells.highlightIds.length,
+      (highlightIdsCount) => {
+        // Iterate through the filters within the table.
+        // If the active filter is "Show selection",
+        // changes made to highlightIds (adding/removing)
+        // are reflected.
+
+        featureTableCells.viewModel.activeFilters.forEach((filter) => {
+          if (filter.type === "selection") {
+            selectionIdCount = filter.objectIds.length; // the filtered selection's id count
+            // Check that the filter selection count is equal to the
+            // highlightIds collection count. If not, update filter selection.
+            if (selectionIdCount !== highlightIdsCount) {
+              featureTableCells.filterBySelection();
             }
           }
         });

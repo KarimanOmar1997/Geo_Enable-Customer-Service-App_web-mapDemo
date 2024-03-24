@@ -5,10 +5,13 @@
         <meta name="viewport"
           content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>Save a web map | Sample | ArcGIS Maps SDK for JavaScript 4.28</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+        <script src="chart.main.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> -->
         <link href="./bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" />
-        <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+        
+        <link rel="stylesheet" type="text/css" href="calcite.css" />
+        <!-- <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.9.2/calcite.css" /> -->
+        <link rel="stylesheet" href="./arcgis_js_v428_api/arcgis_js_api/javascript/4.28/esri/themes/light/main.css" />
         <style>
           html,
           body,
@@ -131,7 +134,10 @@
         margin: 1rem auto .5rem;
       }
       #controls {
-          width: 10rem;
+          width: 30rem;
+          overflow: scroll;
+          max-height: 20rem;
+          overflow-x: hidden
       }
       .container {
         height: 50vh;
@@ -249,11 +255,12 @@
             <button class="action-buttonClassification " id="maintentanceButton" type="button" title="maintentance">maintentance</button>
             <button class="action-buttonClassification " id="outageButton" type="button" title="outage">outage</button>
             <button class="action-buttonClassification " id="NumberOfTicketsButton" type="button" title="Number Of Tickets">Number Of Tickets</button>
+            <button class="action-buttonClassification " id="NumberOutagesRenderer" type="button" title="Number Of Outages">Number Of Outages</button>
           </div>
 
           <div id="controls" class="esri-widget">
-            Filter by SD Status :
-            <select id="type-select" class="esri-select">
+            <p class="my-2">Filter by SD Status :</p>
+            <select id="type-select" class="form-select">
               <option value="all">all</option>
               <option value="Open">Open</option>
               <option value="Dispatched">Dispatched</option>
@@ -262,6 +269,42 @@
               <option value="Sleep">Sleep</option>
               <option value="Closed">Closed</option>
             </select>
+            <p class="my-2"> Filter by Affected Service in CC :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputAffectedService" type="text" class="form-control" placeholder="Affected Service" aria-label="Affected Service"
+                aria-describedby="button-addon1">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon1">Search</button>
+            </div>
+            <p class="my-2"> Filter by Subcategory in CC :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputCCSubcategory" type="text" class="form-control" placeholder="Subcategory" aria-label="Subcategory"
+                aria-describedby="button-addon2">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+            </div>
+            <p class="my-2"> Filter by Area in CC :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputCCArea" type="text" class="form-control" placeholder="Area" aria-label="Area"
+                aria-describedby="button-addon3">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon3">Search</button>
+            </div>
+            <p class="my-2"> Filter by Product Type in RFIs :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputProductType" type="text" class="form-control" placeholder="Product Type" aria-label="Product Type"
+                aria-describedby="button-addon4">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon4">Search</button>
+            </div>
+            <p class="my-2"> Filter by Subcategory in RFIs :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputRFIsSubcategory" type="text" class="form-control" placeholder="Subcategory" aria-label="Subcategory"
+                aria-describedby="button-addon5">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon5">Search</button>
+            </div>
+            <p class="my-2"> Filter by Area in RFIs :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputRFIsArea" type="text" class="form-control" placeholder="Area" aria-label="Area"
+                aria-describedby="button-addon6">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon6">Search</button>
+            </div>
           </div>
           <div class="d-flex mt-3 px-5 justify-content-evenly">
               <div class="col-4 p-1 text-center mx-2 ">
@@ -472,8 +515,9 @@
 
           <nav>
             <div class="nav nav-tabs mt-3	mb-1" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-Towers-tab" data-bs-toggle="tab" data-bs-target="#nav-Towers" type="button" role="tab" aria-controls="nav-Towers" aria-selected="true">Sites</button>
-              <button class="nav-link" id="nav-NetworkCoverage-tab" data-bs-toggle="tab" data-bs-target="#nav-NetworkCoverage" type="button" role="tab" aria-controls="nav-NetworkCoverage" aria-selected="true">Network Coverage</button>
+              <button class="nav-link active" id="nav-Sites-tab" data-bs-toggle="tab" data-bs-target="#nav-Sites" type="button" role="tab" aria-controls="nav-Sites" aria-selected="true">Sites</button>
+              <button class="nav-link" id="nav-Cells-tab" data-bs-toggle="tab" data-bs-target="#nav-Cells" type="button" role="tab" aria-controls="nav-Cells" aria-selected="false">Cells</button>
+              <button class="nav-link" id="nav-NetworkCoverage-tab" data-bs-toggle="tab" data-bs-target="#nav-NetworkCoverage" type="button" role="tab" aria-controls="nav-NetworkCoverage" aria-selected="false">Network Coverage</button>
               <button class="nav-link" id="nav-HPMS-Tickets-tab" data-bs-toggle="tab" data-bs-target="#nav-HPMS-Tickets" type="button" role="tab" aria-controls="nav-HPMS-Tickets" aria-selected="false">HPSM Tickets</button>
               <button class="nav-link" id="nav-RFIsFC-tab" data-bs-toggle="tab" data-bs-target="#nav-RFIsFC" type="button" role="tab" aria-controls="nav-RFIsFC" aria-selected="false">RFIs </button>
               <button class="nav-link" id="nav-CCTicketsFC-tab" data-bs-toggle="tab" data-bs-target="#nav-CCTicketsFC" type="button" role="tab" aria-controls="nav-CCTicketsFC" aria-selected="false">CC Tickets</button>
@@ -485,8 +529,8 @@
             </div>
           </nav>
           <div class="tab-content d-flex" id="nav-tabContent">
-              <div class="container tab-pane fade show active mb-3" id="nav-Towers" role="tabpanel" aria-labelledby="nav-Towers-tab" tabindex="0">
-                 <div id="tableDiv-Towers" >
+              <div class="container tab-pane fade show active mb-3" id="nav-Sites" role="tabpanel" aria-labelledby="nav-Sites-tab" tabindex="0">
+                 <div id="tableDiv-Sites" >
               </div>
            </div>
               <div class="container tab-pane fade mb-3" id="nav-NetworkCoverage" role="tabpanel" aria-labelledby="nav-NetworkCoverage-tab" tabindex="0">
@@ -521,6 +565,10 @@
               <div id="tableDiv-Interference">
               </div>
             </div>
+            <div class="container tab-pane fade mb-3" id="nav-Cells" role="tabpanel" aria-labelledby="nav-Cells-tab" tabindex="0">
+              <div id="tableDiv-Cells">
+              </div>
+            </div>
             <div class="container tab-pane fade mb-3" id="nav-NMSIncident" role="tabpanel" aria-labelledby="nav-NMSIncident-tab" tabindex="0">
               <div id="tableDiv-NMSIncident">
               </div>
@@ -531,7 +579,7 @@
         <script src="./bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/@esri/arcgis-rest-request@4.0.0/dist/bundled/request.umd.js"></script>
         <script src="https://unpkg.com/@esri/arcgis-rest-feature-service@4.0.0/dist/bundled/feature-service.umd.js"></script>
-        <script src="https://js.arcgis.com/4.28/"></script>
+        <script src="./arcgis_js_v428_api/arcgis_js_api/javascript/4.28/init.js"></script>
         <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
         <script
         src="https://code.jquery.com/jquery-3.6.0.min.js"

@@ -1,0 +1,15 @@
+{
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "html.customData": [
+    "./packages/calcite-components/dist/extras/vscode-data.json",
+    "./node_modules/@esri/calcite-components/dist/extras/vscode-data.json"
+  ]
+}
