@@ -53,7 +53,7 @@ require([
       webmapId = window.location.href.split("?id=")[1];
     }
 
-    /***************************************************
+    /******************************************************
      * Creates a new webmap instance. A WebMap can reference
      * a PortalItem ID that represents a WebMap saved to
      * arcgis.com or an on-premise portal.
