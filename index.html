@@ -305,6 +305,24 @@
                 aria-describedby="button-addon6">
               <button class="btn btn-outline-secondary" type="button" id="button-addon6">Search</button>
             </div>
+            <p class="my-2"> Filter by Affected Service in outages :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputOutagesAffectedService" type="text" class="form-control" placeholder="Affected Service" aria-label="Affected Service"
+                aria-describedby="button-addon7">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon7">Search</button>
+            </div>
+            <p class="my-2"> Filter by original Event Time in outages :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputOutagesOriginalEventTimeStartDate" type="datetime-local" class="form-control" >
+              <input id="SearchInputOutagesOriginalEventTimeEndDate" type="datetime-local" class="form-control" aria-describedby="button-addon8">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon8">Search</button>
+            </div>
+            <p class="my-2"> Filter by Cell ID in outages :</p>
+            <div class="input-group mb-3">
+              <input id="SearchInputOutagesCellID" type="text" class="form-control" placeholder="Cell ID" aria-label="Cell ID"
+                aria-describedby="button-addon9">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon9">Search</button>
+            </div>
           </div>
           <div class="d-flex mt-3 px-5 justify-content-evenly">
               <div class="col-4 p-1 text-center mx-2 ">
@@ -581,8 +599,7 @@
         <!-- <script src="https://unpkg.com/@esri/arcgis-rest-feature-service@4.0.0/dist/bundled/feature-service.umd.js"></script> -->
         <script src="./arcgis_js_v428_api/arcgis_js_api/javascript/4.28/init.js"></script>
         <script type="module" src="https://js.arcgis.com/calcite-components/1.9.2/calcite.esm.js"></script>
-        <script
-        src="./jquery-3.6.0.min.js"></script>
+        <script src="./jquery-3.6.0.min.js"></script>
         <script src="./index.js"></script>
       </body>
 </html>
