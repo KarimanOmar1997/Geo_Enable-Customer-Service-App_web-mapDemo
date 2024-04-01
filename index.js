@@ -291,20 +291,36 @@ require([
       ]
     };
 
+    view.when().then(() => {
+
+      // Sort features by average traffic count
+      // large symbols on top - small symbols on the bottom
+      RFIsFC.orderBy = [{
+        field: "Creation_Date_Time",
+        order: "descending"  // "descending" | "ascending"
+      }];
+      CCTicketsFCExportFeatures.orderBy = [{
+        field: "problem_time",
+        order: "descending"  // "descending" | "ascending"
+      }];
+
+
+    });
+
     document.getElementById("coverageStatusButton").addEventListener("click", function () {
-      NetworkCoverage.renderer = coverageStatusRenderer;
+      Cells.renderer = coverageStatusRenderer;
     });
     document.getElementById("maintentanceButton").addEventListener("click", function () {
-      NetworkCoverage.renderer = maintentanceRenderer;
+      Cells.renderer = maintentanceRenderer;
     });
     document.getElementById("outageButton").addEventListener("click", function () {
-      NetworkCoverage.renderer = outageRenderer;
+      Cells.renderer = outageRenderer;
     });
     document.getElementById("NumberOfTicketsButton").addEventListener("click", function () {
-      NetworkCoverage.renderer = NumberOfTicketsRenderer;
+      Cells.renderer = NumberOfTicketsRenderer;
     });
     document.getElementById("NumberOutagesRenderer").addEventListener("click", function () {
-      NetworkCoverage.renderer = NumberOutagesRenderer;
+      Cells.renderer = NumberOutagesRenderer;
     });
     function gitTotalAllRFIAndCCTickets() {
       RFIsFC.when(function () {
@@ -1611,11 +1627,12 @@ require([
       hourData.push(feature.attributes["count"]);
       // console.log(feature);
       // hourLabels.push(feature.attributes["EXPR_1"]+2>12?(feature.attributes["EXPR_1"]+2)-12:feature.attributes["EXPR_1"]+2);
-      hourLabels.push(feature.attributes["EXPR_1"]);
+      let hourInIraq = (feature.attributes["EXPR_1"]); // Ensure it wraps around if exceeding 24 hours
+      hourLabels.push(hourInIraq);
     }
 
     // create a bar chart showing total number of Tickets by time of day
-    updateChart("chart-day", hourData, hourLabels, false, 50);
+    updateChart("chart-day", hourData, hourLabels, false, 100);
 
     // Tickets by time by months
     // run stats query to return total number of Tickets by months
@@ -1642,12 +1659,18 @@ require([
     // Tickets by time of day chart
     // run stats query to return total number of Tickets by time of day
     // stats results will be grouped by the time of day
-    const SDStatusResult = await runQuery("1=1", "sd_status");
-    for (let feature of SDStatusResult.features) {
-      SDStatusData.push(feature.attributes["count"]);
-      // console.log(feature.attributes);
-      SDStatusLabels.push(feature.attributes["sd_status"]);
-    }
+    const SDStatusResult = await runHPSM("1=1", "sd_status");
+    // for (let feature of SDStatusResult.features) {
+    //   SDStatusData.push(feature.attributes["count"]);
+    //   // console.log(feature.attributes);
+    //   SDStatusLabels.push(feature.attributes["sd_status"]);
+    // }
+
+    Object.keys(SDStatusResult).forEach(key => {
+      const value = SDStatusResult[key];
+      SDStatusData.push(value);
+      SDStatusLabels.push(key);
+    });
 
     // create a bar chart showing total number of Tickets by time of day
     updateChart("chart-SDStatus", SDStatusData, SDStatusLabels, false, 50);
@@ -1708,12 +1731,18 @@ require([
     // Tickets by time of day chart
     // run stats query to return total number of Tickets by time of day
     // stats results will be grouped by the time of day
-    const SUBCATEGORYResult = await runQuery("1=1", "subcategory");
-    for (let feature of SUBCATEGORYResult.features) {
-      SUBCATEGORYData.push(feature.attributes["count"]);
-      // console.log(feature.attributes);
-      SUBCATEGORYLabels.push(feature.attributes["subcategory"]);
-    }
+    const SUBCATEGORYResult = await runHPSM("1=1", "subcategory");
+    // for (let feature of SUBCATEGORYResult.features) {
+    //   SUBCATEGORYData.push(feature.attributes["count"]);
+    //   // console.log(feature.attributes);
+    //   SUBCATEGORYLabels.push(feature.attributes["subcategory"]);
+    // }
+
+    Object.keys(SUBCATEGORYResult).forEach(key => {
+      const value = SUBCATEGORYResult[key];
+      SUBCATEGORYData.push(value);
+      SUBCATEGORYLabels.push(key);
+    });
 
     // create a bar chart showing total number of Tickets by time of day
     updatePieChart("chart-subcategory", SUBCATEGORYData, SUBCATEGORYLabels, false, 50);
@@ -1725,8 +1754,14 @@ require([
     // count stats for Tickets 1. by time of day 2. by day of week and 3. by month
     async function runQuery(where, groupStats) {
       // create a query object that honors the layer settings
+      const currentDate = new Date();
+
+      // Calculate date and time 24 hours ago
+      const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
+      console.log(twentyFourHoursAgo.toISOString());
+
       let query = HPSMTickets.createQuery();
-      query.where = where;
+      query.where = `sd_open_time >= '${twentyFourHoursAgo.toISOString()}'`;
       query.outStatistics = [
         {
           statisticType: "count",
@@ -1738,6 +1773,75 @@ require([
       query.orderByFields = [groupStats];
       let result = await HPSMTickets.queryFeatures(query);
       return result;
+    }
+    async function runHPSM(where, groupStats) {
+      // create a query object that honors the layer settings
+      // let query = HPSMTickets.createQuery();
+      const currentDate = new Date();
+
+      // Calculate date and time 24 hours ago
+      const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
+      console.log(twentyFourHoursAgo.toISOString());
+      // AND cgi = 'BAG0400'
+      // if (cgi) {
+      //   query.where = `Creation_Date_Time >= '${twentyFourHoursAgo.toISOString()}' AND cgi = '${cgi}'`;
+      // } else {
+      //   query.where = `Creation_Date_Time >= '${twentyFourHoursAgo.toISOString()}'`;
+      // }
+      // query.outStatistics = [
+      //   {
+      //     statisticType: "count",
+      //     onStatisticField: "*",
+      //     outStatisticFieldName: "count"
+      //   }
+      // ];
+      // query.groupByFieldsForStatistics = [groupStats];
+      // query.orderByFields = [groupStats];
+
+
+      // let result = await RFIsFC.queryFeatures(query);
+
+      // const top1Subcategories = result.features.slice(0, 10)
+      // console.log("top1Subcategories", top1Subcategories);
+
+      //======================================================= by top 10 records ===================================
+
+      const queryParams = {
+        where: `sd_open_time >= '${twentyFourHoursAgo.toISOString()}'`, // Specify your query parameters
+        outFields: '*', // Specify the fields you want to retrieve
+        returnGeometry: true,
+        orderByFields: "sd_open_time DESC",
+        // resultRecordCount: 1,
+      };
+      let resultQuery = await HPSMTickets.queryFeatures(queryParams);
+      const top10features = resultQuery.features.slice(0, 10)
+
+      const subcategoryCounts = {};
+      top10features.forEach(function (feature) {
+        const subcategory = feature.attributes[groupStats]; // Assuming your subcategory field is 'Subcategory'
+        if (subcategory in subcategoryCounts) {
+          subcategoryCounts[subcategory]++;
+        } else {
+          subcategoryCounts[subcategory] = 1;
+        }
+      });
+
+      // 4. Sort subcategories by ticket count
+      const sortedSubcategories = Object.keys(subcategoryCounts).sort(function (a, b) {
+        return subcategoryCounts[b] - subcategoryCounts[a];
+      });
+
+      const top10Subcategories = sortedSubcategories.slice(0, 10);
+
+      const subcategoryCounts2 = {};
+
+      top10Subcategories.forEach(function (feature) {
+
+        subcategoryCounts2[feature] = subcategoryCounts[feature]
+
+      })
+
+      return subcategoryCounts2;
     }
     async function runRFIQuery(cgi, groupStats) {
       // create a query object that honors the layer settings
@@ -1879,6 +1983,7 @@ require([
       return subcategoryCounts2;
 
     }
+    
 
     // Keeps track of a selected bar on monthly or week day chart
     // We use this info to toggle the clicked bar color
@@ -1944,7 +2049,7 @@ require([
           const queryValue = monthLabels.indexOf(label) + 1;
           where = `extract(month from sd_open_time) = ${queryValue}`;
           const title = "Tickets by days in " + label;
-          dayDistributionStats(where, "extract(day from sd_open_time)", title);
+          // dayDistributionStats(where, "extract(day from sd_open_time)", title);
         } else if (event.target.id == "chart-SDStatusCanvas") {
           // apply effect to Tickets happened during the selected month
           const queryValue = label;
@@ -1959,7 +2064,7 @@ require([
           where = `sd_open_time = ${queryValue}`;
           where = `DAY_WEEK = ${queryValue}`;
           const title = "Tickets by hours on " + label;
-          dayDistributionStats(where, "extract(hour from sd_open_time)", title);
+          // dayDistributionStats(where, "extract(hour from sd_open_time)", title);
         }
         layerViewHPSM.featureEffect = {
           filter: {
@@ -2017,7 +2122,7 @@ require([
     chartChoiceControl?.addEventListener("calciteChipGroupSelect", (event) => {
       // clear feature effect on the layer view and clicked bar chart
       for (let chart of charts) {
-        changeBarColor(chart, previouslySelectedBarIndex, "#007AC2");
+        // changeBarColor(chart, previouslySelectedBarIndex, "#007AC2");
       }
       layerCCTicketsView.featureEffect = undefined;
       layerViewHPSM.featureEffect = undefined;
@@ -2284,6 +2389,162 @@ require([
           zoomToSelection: true
         }
       },
+        tableTemplate: {
+           // Autocast to TableTemplate
+           columnTemplates: [
+             // Takes an array of FieldColumnTemplate and GroupColumnTemplate
+         
+              {
+                type: "OBJECTID",
+                fieldName: "OBJECTID",
+                label: "OBJECTID"
+              },
+              {
+                type: "field",
+                fieldName: "Creation_Date_Time",
+                label: "Creation_Date_Time",
+                direction: "desc"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Interaction_ID",
+                label: "Interaction_ID"
+              },
+              {
+                type: "field",
+                fieldName: "Category",
+                label: "Category"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Affected_Service",
+                label: "Affected_Service"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "User_ID",
+                label: "User_ID"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "User_Name",
+                label: "User_Name"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "User_Location",
+                label: "User_Location"
+              }
+              ,
+          
+              {
+                type: "field",
+                fieldName: "Balance",
+                label: "Balance"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Customer_Plan",
+                label: "Customer_Plan"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Customer_Segment",
+                label: "Customer_Segment"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Ticket_Status",
+                label: "Ticket_Status"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Service_Recipient_MSISDN",
+                label: "Service_Recipient_MSISDN"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Contact_MSISDN",
+                label: "Contact_MSISDN"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Approval_Status",
+                label: "Approval_Status"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "Closure_Code",
+                label: "Closure_Code"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "PRODUCT_TYPE",
+                label: "PRODUCT_TYPE"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "CMC",
+                label: "CMC"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "CMC_Waiting",
+                label: "CMC_Waiting"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "ASIA_CMC_ID",
+                label: "ASIA_CMC_ID"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "SUBCATEGORY",
+                label: "SUBCATEGORY"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "RATE_PLAN",
+                label: "RATE_PLAN"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "AUTO_GOVERNORATE",
+                label: "AUTO_GOVERNORATE"
+              }
+              ,
+              {
+                type: "field",
+                fieldName: "cgi",
+                label: "cgi"
+              }
+              ,
+              {
+                type: "GlobalID",
+                fieldName: "GlobalID",
+                label: "GlobalID"
+              }
+           ]
+         },
 
       container: document.getElementById("tableDiv-RFIsFC")
     });
@@ -2301,6 +2562,314 @@ require([
           selectedRecordsShowSelectedToggle: true,
           zoomToSelection: true
         }
+      },
+      tableTemplate: {
+        // Autocast to TableTemplate
+        columnTemplates: [
+          // Takes an array of FieldColumnTemplate and GroupColumnTemplate
+      
+           {
+             type: "OBJECTID",
+             fieldName: "OBJECTID",
+             label: "OBJECTID"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "problem_time",
+             label: "problem_time",
+             direction: "desc"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "im_id",
+             label: "IM ID"
+           },
+           {
+             type: "field",
+             fieldName: "sd_id",
+             label: "SD ID"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "im_group",
+             label: "IM Group"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "sd_open_time",
+             label: "SD OPEN_TIME"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "sd_opened_by",
+             label: "SD opened By"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "sd",
+             label: "SD"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "im_opened_by",
+             label: "IM OPENED_BY",
+        
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "sd_status",
+             label: "SD Status"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "im__status",
+             label: "IM _STATUS"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "im_open_time",
+             label: "IM OPEN_TIME"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "area",
+             label: "area"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "subcategory",
+             label: "SUBCATEGORY"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "sd_close_time",
+             label: "SD CLOSE_TIME"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "sd_resolution_time",
+             label: "SD RESOLUTION_TIME"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cc_slt",
+             label: "CC_SLT"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cemu_ola_status",
+             label: "CEMU OLA Status"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "general_outage",
+             label: "GENERAL_OUTAGE"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "sla_status",
+             label: "SLA_status"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "affected_service",
+             label: "Affected Service"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "gouvernorate",
+             label: "GOUVERNORATE"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "resolution",
+             label: "RESOLUTION"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "asia_bscs_rate_plan",
+             label: "ASIA_BSCS_RATE_PLAN"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "asia_bscs_balance",
+             label: "ASIA_BSCS_BALANCE"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "resolution_code",
+             label: "RESOLUTION_CODE"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "category",
+             label: "CATEGORY"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "description",
+             label: "DESCRIPTION"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cemu_comment",
+             label: "CEMU Comment"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "escalate_ticket",
+             label: "Escalate Ticket"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "contact_msisdn",
+             label: "CONTACT_MSISDN"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cell_id",
+             label: "CELL_ID"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "msisdn",
+             label: "MSISDN"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cell_name",
+             label: "CELL_NAME"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "siteid",
+             label: "SITEID"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "customer_segment",
+             label: "CUSTOMER_SEGMENT"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "sitename",
+             label: "SITENAME"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cmc",
+             label: "CMC"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "reopened",
+             label: "REOPENED"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cmc_waiting",
+             label: "CMC Waiting"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cmc_id",
+             label: "CMC_ID"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "closed_by_id",
+             label: "CLOSED BY ID"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "region",
+             label: "Region"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "resolved_by",
+             label: "RESOLVED_BY"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "expected_resolution_date",
+             label: "EXPECTED RESOLUTION DATE"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "auto_governorate",
+             label: "AUTO-GOVERNORATE"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "channel",
+             label: "CHANNEL"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "phone_number",
+             label: "Phone number"
+           }
+           ,
+           {
+             type: "field",
+             fieldName: "cgi",
+             label: "cgi"
+           }
+         
+           ,
+           {
+             type: "GlobalID",
+             fieldName: "GlobalID",
+             label: "GlobalID"
+           }
+        ]
       },
 
       container: document.getElementById("tableDiv-CCTicketsFC")

@@ -108,9 +108,7 @@
           flex-direction: column;
           overflow: auto;
       }
-      #controls {
-        padding: 10px;
-      }
+
       #rightPanel {
         max-height: 98%;
       }
@@ -134,6 +132,7 @@
         margin: 1rem auto .5rem;
       }
       #controls {
+          padding: 10px;
           width: 30rem;
           overflow: scroll;
           max-height: 20rem;
@@ -363,11 +362,11 @@
               <calcite-shell content-behind class="custom-example-theme ">
                 <calcite-shell-panel id="rightPanel" slot="panel-end" style="height: 65vh!important;" display-mode="float">
                   <calcite-panel id="statsPanel" heading="Note:" description="Click on the graph bars to highlight the data in the map.">
-                    <calcite-chip-group id="type-chips" selection-mode="single-persist">
+                    <!-- <calcite-chip-group id="type-chips" selection-mode="single-persist">
                       <calcite-chip appearance="outline-fill" selected value="day">Daily</calcite-chip>
-                      <!-- <calcite-chip appearance="outline-fill" value="week">Weekly</calcite-chip> -->
+                      <calcite-chip appearance="outline-fill" value="week">Weekly</calcite-chip>
                       <calcite-chip appearance="outline-fill" value="month">Monthly</calcite-chip>
-                    </calcite-chip-group>
+                    </calcite-chip-group> -->
                     <calcite-block open id="chart-day" heading="Total SD OPEN_TIME by time of day">
                     </calcite-block>
                     <calcite-block open id="chart-week" heading="Total SD OPEN_TIME by time of week" style="display:none">
