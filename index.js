@@ -48,7 +48,7 @@ require([
   FeatureTable
 ) => {
   (async () => {
-    let webmapId = "f4f6642aa5514d83aae6de0ebb65057e";
+    let webmapId = "8ded6ec6720542b39e7334646342d6d0";
     if (window.location.href.indexOf("?id=") > 0) {
       webmapId = window.location.href.split("?id=")[1];
     }
@@ -119,24 +119,24 @@ require([
     console.log("to get 8 :", map.layers.getItemAt(8).title);
     console.log("to get 9 :", map.layers.getItemAt(9).title);
     console.log("to get 10 :", map.layers.getItemAt(10).title);
-    console.log("to get 11 :", map.layers.getItemAt(11).title);
+    // console.log("to get 11 :", map.layers.getItemAt(11).title);
     const Iraq = map.layers.getItemAt(0);
     const Governerate = map.layers.getItemAt(1);
     const NetworkArea = map.layers.getItemAt(2);
     const CoveragebyRSRP_85_CoveragebyRSRP_44_85 = map.layers.getItemAt(3);
-    const NetworkCoverage = map.layers.getItemAt(4);
-    const Cells = map.layers.getItemAt(5);
-    const HPSMTickets = map.layers.getItemAt(6);
-    const sitesFinal = map.layers.getItemAt(7);
-    const RFIsFC = map.layers.getItemAt(8);
-    const CCTicketsFCExportFeatures = map.layers.getItemAt(9);
-    const Cell_Site_Data_Jammer_Sites = map.layers.getItemAt(10);
-    const FiberIssues_WFL1 = map.layers.getItemAt(11);
+    // const NetworkCoverage = map.layers.getItemAt(4);
+    const Cells = map.layers.getItemAt(4);
+    const HPSMTickets = map.layers.getItemAt(5);
+    const sitesFinal = map.layers.getItemAt(6);
+    const RFIsFC = map.layers.getItemAt(7);
+    const CCTicketsFCExportFeatures = map.layers.getItemAt(8);
+    const Cell_Site_Data_Jammer_Sites = map.layers.getItemAt(9);
+    const FiberIssues_WFL1 = map.layers.getItemAt(10);
     const IraqTitle = 'Iraq'
     const GovernerateTitle = 'Governerate'
     const NetworkAreaTitle = 'Network Area'
     const CoveragebyRSRP_85_CoveragebyRSRP_44_85Title = 'CoveragebyRSRP_85 - CoveragebyRSRP_44_85'
-    const NetworkCoverageTitle = 'Network Coverage'
+    // const NetworkCoverageTitle = 'Network Coverage'
     const CellsTitle = 'Cell'
     const HPSMTicketsTitle = 'HPSM Tickets'
     const sitesFinalTitle = 'sitesfinal'
@@ -291,21 +291,6 @@ require([
       ]
     };
 
-    view.when().then(() => {
-
-      // Sort features by average traffic count
-      // large symbols on top - small symbols on the bottom
-      RFIsFC.orderBy = [{
-        field: "Creation_Date_Time",
-        order: "descending"  // "descending" | "ascending"
-      }];
-      CCTicketsFCExportFeatures.orderBy = [{
-        field: "problem_time",
-        order: "descending"  // "descending" | "ascending"
-      }];
-
-
-    });
 
     document.getElementById("coverageStatusButton").addEventListener("click", function () {
       Cells.renderer = coverageStatusRenderer;
@@ -776,7 +761,7 @@ require([
       featureTableCCTickets.highlightIds.removeAll();
       featureTableJammerSites.highlightIds.removeAll();
       featureTableSites.highlightIds.removeAll();
-      featureTableNetworkCoverage.highlightIds.removeAll();
+      // featureTableNetworkCoverage.highlightIds.removeAll();
       featureTableCells.highlightIds.removeAll();
       featureTableOutagesData.highlightIds.removeAll();
 
@@ -1923,9 +1908,9 @@ require([
       console.log(twentyFourHoursAgo.toISOString());
       // AND cgi = 'BAG0400'
       if (cgi) {
-        query.where = `sd_open_time >= '${twentyFourHoursAgo.toISOString()}' AND cgi = '${cgi}'`;
+        query.where = `problem_time >= '${twentyFourHoursAgo.toISOString()}' AND cgi = '${cgi}'`;
       } else {
-        query.where = `sd_open_time >= '${twentyFourHoursAgo.toISOString()}'`;
+        query.where = `problem_time >= '${twentyFourHoursAgo.toISOString()}'`;
       }
       query.outStatistics = [
         {
@@ -2356,24 +2341,24 @@ require([
       container: document.getElementById("tableDiv-OutagesData")
     });
 
-    const featureTableNetworkCoverage = new FeatureTable({
-      view: view, // Required for feature highlight to work
-      layer: NetworkCoverage,
-      visibleElements: {
-        // Autocast to VisibleElements
-        menuItems: {
-          clearSelection: true,
+    // const featureTableNetworkCoverage = new FeatureTable({
+    //   view: view, // Required for feature highlight to work
+    //   layer: NetworkCoverage,
+    //   visibleElements: {
+    //     // Autocast to VisibleElements
+    //     menuItems: {
+    //       clearSelection: true,
 
-          refreshData: true,
-          toggleColumns: true,
-          selectedRecordsShowAllToggle: true,
-          selectedRecordsShowSelectedToggle: true,
-          zoomToSelection: true
-        }
-      },
+    //       refreshData: true,
+    //       toggleColumns: true,
+    //       selectedRecordsShowAllToggle: true,
+    //       selectedRecordsShowSelectedToggle: true,
+    //       zoomToSelection: true
+    //     }
+    //   },
 
-      container: document.getElementById("tableDiv-NetworkCoverage")
-    });
+    //   container: document.getElementById("tableDiv-NetworkCoverage")
+    // });
 
     const featureTableRFIsFC = new FeatureTable({
       view: view, // Required for feature highlight to work
@@ -2957,7 +2942,7 @@ require([
         // Filter out and show only the visible features in the feature table.
         featureTableSites.filterGeometry = view.extent;
         featureTableHPSMTickets.filterGeometry = view.extent;
-        featureTableNetworkCoverage.filterGeometry = view.extent;
+        // featureTableNetworkCoverage.filterGeometry = view.extent;
         featureTableRFIsFC.filterGeometry = view.extent;
         featureTableCCTickets.filterGeometry = view.extent;
         featureTableJammerSites.filterGeometry = view.extent;
@@ -2975,7 +2960,7 @@ require([
       handles.removeAll();
       featureTableHPSMTickets.highlightIds.removeAll();
       featureTableSites.highlightIds.removeAll();
-      featureTableNetworkCoverage.highlightIds.removeAll();
+      // featureTableNetworkCoverage.highlightIds.removeAll();
       featureTableRFIsFC.highlightIds.removeAll();
       featureTableCCTickets.highlightIds.removeAll();
       featureTableJammerSites.highlightIds.removeAll();
@@ -3012,12 +2997,12 @@ require([
             result.graphic.layer === Cell_Site_Data_Jammer_Sites
 
         }
-        else if (result.graphic.layer === NetworkCoverage) {
-          return result.graphic &&
-            result.graphic.layer &&
-            result.graphic.layer === NetworkCoverage
+        // else if (result.graphic.layer === NetworkCoverage) {
+        //   return result.graphic &&
+        //     result.graphic.layer &&
+        //     result.graphic.layer === NetworkCoverage
 
-        }
+        // }
         else if (result.graphic.layer === CCTicketsFCExportFeatures) {
           return result.graphic &&
             result.graphic.layer &&
@@ -3099,18 +3084,18 @@ require([
             featureTableCells.highlightIds.add(objectId);
           }
         }
-        else if (candidate.layer.title == NetworkCoverageTitle) {
+        // else if (candidate.layer.title == NetworkCoverageTitle) {
 
 
-          if (featureTableNetworkCoverage.highlightIds.includes(objectId)) {
-            // Remove feature from current selection if feature
-            // is already added to highlightIds collection
-            featureTableNetworkCoverage.highlightIds.remove(objectId);
-          } else {
-            // Add this feature to the featureTableHPSMTickets highlightIds collection
-            featureTableNetworkCoverage.highlightIds.add(objectId);
-          }
-        }
+        //   if (featureTableNetworkCoverage.highlightIds.includes(objectId)) {
+        //     // Remove feature from current selection if feature
+        //     // is already added to highlightIds collection
+        //     featureTableNetworkCoverage.highlightIds.remove(objectId);
+        //   } else {
+        //     // Add this feature to the featureTableHPSMTickets highlightIds collection
+        //     featureTableNetworkCoverage.highlightIds.add(objectId);
+        //   }
+        // }
         else if (candidate.layer.title == RFIsFCTitle) {
 
 
@@ -3401,26 +3386,26 @@ require([
         });
       }
     );
-    reactiveUtils.watch(
-      () => featureTableNetworkCoverage.highlightIds.length,
-      (highlightIdsCount) => {
-        // Iterate through the filters within the table.
-        // If the active filter is "Show selection",
-        // changes made to highlightIds (adding/removing)
-        // are reflected.
+    // reactiveUtils.watch(
+    //   () => featureTableNetworkCoverage.highlightIds.length,
+    //   (highlightIdsCount) => {
+    //     // Iterate through the filters within the table.
+    //     // If the active filter is "Show selection",
+    //     // changes made to highlightIds (adding/removing)
+    //     // are reflected.
 
-        featureTableNetworkCoverage.viewModel.activeFilters.forEach((filter) => {
-          if (filter.type === "selection") {
-            selectionIdCount = filter.objectIds.length; // the filtered selection's id count
-            // Check that the filter selection count is equal to the
-            // highlightIds collection count. If not, update filter selection.
-            if (selectionIdCount !== highlightIdsCount) {
-              featureTableNetworkCoverage.filterBySelection();
-            }
-          }
-        });
-      }
-    );
+    //     featureTableNetworkCoverage.viewModel.activeFilters.forEach((filter) => {
+    //       if (filter.type === "selection") {
+    //         selectionIdCount = filter.objectIds.length; // the filtered selection's id count
+    //         // Check that the filter selection count is equal to the
+    //         // highlightIds collection count. If not, update filter selection.
+    //         if (selectionIdCount !== highlightIdsCount) {
+    //           featureTableNetworkCoverage.filterBySelection();
+    //         }
+    //       }
+    //     });
+    //   }
+    // );
     reactiveUtils.watch(
       () => featureTableRFIsFC.highlightIds.length,
       (highlightIdsCount) => {
