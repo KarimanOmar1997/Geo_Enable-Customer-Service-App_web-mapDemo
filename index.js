@@ -974,101 +974,101 @@ require([
       // });
     });
 
-    const SearchInputAffectedService = document.getElementById("SearchInputAffectedService");
-    SearchInputAffectedService.addEventListener("change", async () => {
-      const value = SearchInputAffectedService.value;
-      console.log(value);
-      // const layer = map.layers.getItemAt(6);
-      await CCTicketsFCExportFeatures.load();
-      // Create an array of layerViews to be able to highlight selected features.
-      if (CCTicketsFCExportFeatures.type === "feature") {
+    // const SearchInputAffectedService = document.getElementById("SearchInputAffectedService");
+    // SearchInputAffectedService.addEventListener("change", async () => {
+    //   const value = SearchInputAffectedService.value;
+    //   console.log(value);
+    //   // const layer = map.layers.getItemAt(6);
+    //   await CCTicketsFCExportFeatures.load();
+    //   // Create an array of layerViews to be able to highlight selected features.
+    //   if (CCTicketsFCExportFeatures.type === "feature") {
 
-        CCTicketsFCExportFeatures.definitionExpression = value === ""
-          ? null
-          : `affected_service = '${value}'`
+    //     CCTicketsFCExportFeatures.definitionExpression = value === ""
+    //       ? null
+    //       : `affected_service = '${value}'`
 
-      }
-    });
+    //   }
+    // });
 
-    const SearchInputCCSubcategory = document.getElementById("SearchInputCCSubcategory");
-    SearchInputCCSubcategory.addEventListener("change", async () => {
-      const value = SearchInputCCSubcategory.value;
-      console.log(value);
-      // const layer = map.layers.getItemAt(6);
-      await CCTicketsFCExportFeatures.load();
-      // Create an array of layerViews to be able to highlight selected features.
-      if (CCTicketsFCExportFeatures.type === "feature") {
+    // const SearchInputCCSubcategory = document.getElementById("SearchInputCCSubcategory");
+    // SearchInputCCSubcategory.addEventListener("change", async () => {
+    //   const value = SearchInputCCSubcategory.value;
+    //   console.log(value);
+    //   // const layer = map.layers.getItemAt(6);
+    //   await CCTicketsFCExportFeatures.load();
+    //   // Create an array of layerViews to be able to highlight selected features.
+    //   if (CCTicketsFCExportFeatures.type === "feature") {
 
-        CCTicketsFCExportFeatures.definitionExpression = value === ""
-          ? null
-          : `subcategory = '${value}'`
+    //     CCTicketsFCExportFeatures.definitionExpression = value === ""
+    //       ? null
+    //       : `subcategory = '${value}'`
 
-      }
-    });
+    //   }
+    // });
 
-    const SearchInputCCArea = document.getElementById("SearchInputCCArea");
-    SearchInputCCArea.addEventListener("change", async () => {
-      const value = SearchInputCCArea.value;
-      console.log(value);
-      // const layer = map.layers.getItemAt(6);
-      await CCTicketsFCExportFeatures.load();
-      // Create an array of layerViews to be able to highlight selected features.
-      if (CCTicketsFCExportFeatures.type === "feature") {
+    // const SearchInputCCArea = document.getElementById("SearchInputCCArea");
+    // SearchInputCCArea.addEventListener("change", async () => {
+    //   const value = SearchInputCCArea.value;
+    //   console.log(value);
+    //   // const layer = map.layers.getItemAt(6);
+    //   await CCTicketsFCExportFeatures.load();
+    //   // Create an array of layerViews to be able to highlight selected features.
+    //   if (CCTicketsFCExportFeatures.type === "feature") {
 
-        CCTicketsFCExportFeatures.definitionExpression = value === ""
-          ? null
-          : `area = '${value}'`
+    //     CCTicketsFCExportFeatures.definitionExpression = value === ""
+    //       ? null
+    //       : `area = '${value}'`
 
-      }
-    });
+    //   }
+    // });
 
-    const SearchInputProductType = document.getElementById("SearchInputProductType");
-    SearchInputProductType.addEventListener("change", async () => {
-      const value = SearchInputProductType.value;
-      console.log(value);
-      // const layer = map.layers.getItemAt(6);
-      await RFIsFC.load();
-      // Create an array of layerViews to be able to highlight selected features.
-      if (RFIsFC.type === "feature") {
+    // const SearchInputProductType = document.getElementById("SearchInputProductType");
+    // SearchInputProductType.addEventListener("change", async () => {
+    //   const value = SearchInputProductType.value;
+    //   console.log(value);
+    //   // const layer = map.layers.getItemAt(6);
+    //   await RFIsFC.load();
+    //   // Create an array of layerViews to be able to highlight selected features.
+    //   if (RFIsFC.type === "feature") {
 
-        RFIsFC.definitionExpression = value === ""
-          ? null
-          : `PRODUCT_TYPE = '${value}'`
+    //     RFIsFC.definitionExpression = value === ""
+    //       ? null
+    //       : `PRODUCT_TYPE = '${value}'`
 
-      }
-    });
+    //   }
+    // });
 
-    const SearchInputRFIsSubcategory = document.getElementById("SearchInputRFIsSubcategory");
-    SearchInputRFIsSubcategory.addEventListener("change", async () => {
-      const value = SearchInputRFIsSubcategory.value;
-      console.log(value);
-      // const layer = map.layers.getItemAt(6);
-      await RFIsFC.load();
-      // Create an array of layerViews to be able to highlight selected features.
-      if (RFIsFC.type === "feature") {
+    // const SearchInputRFIsSubcategory = document.getElementById("SearchInputRFIsSubcategory");
+    // SearchInputRFIsSubcategory.addEventListener("change", async () => {
+    //   const value = SearchInputRFIsSubcategory.value;
+    //   console.log(value);
+    //   // const layer = map.layers.getItemAt(6);
+    //   await RFIsFC.load();
+    //   // Create an array of layerViews to be able to highlight selected features.
+    //   if (RFIsFC.type === "feature") {
 
-        RFIsFC.definitionExpression = value === ""
-          ? null
-          : `SUBCATEGORY = '${value}'`
+    //     RFIsFC.definitionExpression = value === ""
+    //       ? null
+    //       : `SUBCATEGORY = '${value}'`
 
-      }
-    });
+    //   }
+    // });
 
-    const SearchInputRFIsArea = document.getElementById("SearchInputRFIsArea");
-    SearchInputRFIsArea.addEventListener("change", async () => {
-      const value = SearchInputRFIsArea.value;
-      console.log(value);
-      // const layer = map.layers.getItemAt(6);
-      await RFIsFC.load();
-      // Create an array of layerViews to be able to highlight selected features.
-      if (RFIsFC.type === "feature") {
+    // const SearchInputRFIsArea = document.getElementById("SearchInputRFIsArea");
+    // SearchInputRFIsArea.addEventListener("change", async () => {
+    //   const value = SearchInputRFIsArea.value;
+    //   console.log(value);
+    //   // const layer = map.layers.getItemAt(6);
+    //   await RFIsFC.load();
+    //   // Create an array of layerViews to be able to highlight selected features.
+    //   if (RFIsFC.type === "feature") {
 
-        RFIsFC.definitionExpression = value === ""
-          ? null
-          : `User_Location = '${value}'`
+    //     RFIsFC.definitionExpression = value === ""
+    //       ? null
+    //       : `User_Location = '${value}'`
 
-      }
-    });
+    //   }
+    // });
 
 
     document.getElementById("SearchBTN").addEventListener("click", searchOnMap);
@@ -3174,6 +3174,389 @@ require([
     // Watch the featureTableSites's highlightIds.length property,
     // and get the count of highlighted features within
     // the table.
+
+    const SearchInputAffectedService = document.getElementById("SearchInputAffectedService");
+    SearchInputAffectedService.addEventListener("change", async () => {
+      const value = SearchInputAffectedService.value;
+      console.log(value);
+      // // const layer = map.layers.getItemAt(6);
+      // await CCTicketsFCExportFeatures.load();
+      // // Create an array of layerViews to be able to highlight selected features.
+      // if (CCTicketsFCExportFeatures.type === "feature") {
+
+      //   CCTicketsFCExportFeatures.definitionExpression = value === ""
+      //     ? null
+      //     : `affected_service = '${value}'`
+
+      // }
+            
+      // Ensure featureTableOutagesData and featureLayerOutagesData are properly initialized
+      try {
+        // Clear existing highlights
+        handles.removeAll();
+        featureTableHPSMTickets.highlightIds.removeAll();
+        featureTableSites.highlightIds.removeAll();
+        // featureTableNetworkCoverage.highlightIds.removeAll();
+        featureTableRFIsFC.highlightIds.removeAll();
+        featureTableCCTickets.highlightIds.removeAll();
+        featureTableJammerSites.highlightIds.removeAll();
+        featureTableCells.highlightIds.removeAll();
+        featureTableOutagesData.highlightIds.removeAll();
+    
+        const queryParams = {
+          where: `affected_service = '${value}'`, // Specify your query criteria
+          outFields: ["*"] // Specify the fields you want to retrieve
+        };
+    
+        // Query features
+        const result = await CCTicketsFCExportFeatures.queryFeatures(queryParams);
+        
+        // Handle the query result
+        result.features.forEach(async(feature) => {
+          // console.log(feature.attributes.original_event_time);
+          const queryParams = {
+            where: `SITEID = '${feature.attributes.cgi}'`, // Specify your query criteria
+            outFields: ["*"] // Specify the fields you want to retrieve
+          };
+          const result = await Cells.queryFeatures(queryParams);
+          result.features.forEach(async(feature) => {
+            const objectId = feature.attributes.OBJECTID;
+            if (!featureTableCells.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCells.highlightIds.add(objectId);
+            } 
+          })
+          
+          // if (candidate) {
+            const objectId = feature.attributes.OBJECTID; // Access objectId directly from feature.attributes
+            if (!featureTableCCTickets.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCCTickets.highlightIds.add(objectId);
+            } 
+        });
+      } catch (error) {
+        console.error("Error querying features:", error);
+      }
+    });
+
+    const SearchInputCCSubcategory = document.getElementById("SearchInputCCSubcategory");
+    SearchInputCCSubcategory.addEventListener("change", async () => {
+      const value = SearchInputCCSubcategory.value;
+      console.log(value);
+      // // const layer = map.layers.getItemAt(6);
+      // await CCTicketsFCExportFeatures.load();
+      // // Create an array of layerViews to be able to highlight selected features.
+      // if (CCTicketsFCExportFeatures.type === "feature") {
+
+      //   CCTicketsFCExportFeatures.definitionExpression = value === ""
+      //     ? null
+      //     : `subcategory = '${value}'`
+
+      // }
+      try {
+        // Clear existing highlights
+        handles.removeAll();
+        featureTableHPSMTickets.highlightIds.removeAll();
+        featureTableSites.highlightIds.removeAll();
+        // featureTableNetworkCoverage.highlightIds.removeAll();
+        featureTableRFIsFC.highlightIds.removeAll();
+        featureTableCCTickets.highlightIds.removeAll();
+        featureTableJammerSites.highlightIds.removeAll();
+        featureTableCells.highlightIds.removeAll();
+        featureTableOutagesData.highlightIds.removeAll();
+    
+        const queryParams = {
+          where: `subcategory = '${value}'`, // Specify your query criteria
+          outFields: ["*"] // Specify the fields you want to retrieve
+        };
+    
+        // Query features
+        const result = await CCTicketsFCExportFeatures.queryFeatures(queryParams);
+        
+        // Handle the query result
+        result.features.forEach(async(feature) => {
+         
+          // console.log(feature.attributes.cgi);
+          const queryParams = {
+            
+            where: `SITEID = '${feature.attributes.cgi}'`, // Specify your query criteria
+            outFields: ["*"] // Specify the fields you want to retrieve
+          };
+          const result = await Cells.queryFeatures(queryParams);
+          result.features.forEach(async(feature) => {
+            const objectId = feature.attributes.OBJECTID;
+            if (!featureTableCells.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCells.highlightIds.add(objectId);
+            } 
+          })
+          
+          // if (candidate) {
+            const objectId = feature.attributes.OBJECTID; // Access objectId directly from feature.attributes
+            if (!featureTableCCTickets.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCCTickets.highlightIds.add(objectId);
+            } 
+        });
+      } catch (error) {
+        console.error("Error querying features:", error);
+      }
+    });
+
+    const SearchInputCCArea = document.getElementById("SearchInputCCArea");
+    SearchInputCCArea.addEventListener("change", async () => {
+      const value = SearchInputCCArea.value;
+      console.log(value);
+      // // const layer = map.layers.getItemAt(6);
+      // await CCTicketsFCExportFeatures.load();
+      // // Create an array of layerViews to be able to highlight selected features.
+      // if (CCTicketsFCExportFeatures.type === "feature") {
+
+      //   CCTicketsFCExportFeatures.definitionExpression = value === ""
+      //     ? null
+      //     : `area = '${value}'`
+
+      // }
+      
+      try {
+        // Clear existing highlights
+        handles.removeAll();
+        featureTableHPSMTickets.highlightIds.removeAll();
+        featureTableSites.highlightIds.removeAll();
+        // featureTableNetworkCoverage.highlightIds.removeAll();
+        featureTableRFIsFC.highlightIds.removeAll();
+        featureTableCCTickets.highlightIds.removeAll();
+        featureTableJammerSites.highlightIds.removeAll();
+        featureTableCells.highlightIds.removeAll();
+        featureTableOutagesData.highlightIds.removeAll();
+    
+        const queryParams = {
+          where: `area = '${value}'`, // Specify your query criteria
+          outFields: ["*"] // Specify the fields you want to retrieve
+        };
+    
+        // Query features
+        const result = await CCTicketsFCExportFeatures.queryFeatures(queryParams);
+        
+        // Handle the query result
+        result.features.forEach(async(feature) => {
+          // console.log(feature.attributes.original_event_time);
+          const queryParams = {
+            where: `SITEID = '${feature.attributes.cgi}'`, // Specify your query criteria
+            outFields: ["*"] // Specify the fields you want to retrieve
+          };
+          const result = await Cells.queryFeatures(queryParams);
+          result.features.forEach(async(feature) => {
+            const objectId = feature.attributes.OBJECTID;
+            if (!featureTableCells.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCells.highlightIds.add(objectId);
+            } 
+          })
+          
+          // if (candidate) {
+            const objectId = feature.attributes.OBJECTID; // Access objectId directly from feature.attributes
+            if (!featureTableCCTickets.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCCTickets.highlightIds.add(objectId);
+            } 
+        });
+      } catch (error) {
+        console.error("Error querying features:", error);
+      }
+
+    });
+
+    const SearchInputProductType = document.getElementById("SearchInputProductType");
+    SearchInputProductType.addEventListener("change", async () => {
+      const value = SearchInputProductType.value;
+      console.log(value);
+      // // const layer = map.layers.getItemAt(6);
+      // await RFIsFC.load();
+      // // Create an array of layerViews to be able to highlight selected features.
+      // if (RFIsFC.type === "feature") {
+
+      //   RFIsFC.definitionExpression = value === ""
+      //     ? null
+      //     : `PRODUCT_TYPE = '${value}'`
+
+      // }
+      try {
+        // Clear existing highlights
+        handles.removeAll();
+        featureTableHPSMTickets.highlightIds.removeAll();
+        featureTableSites.highlightIds.removeAll();
+        // featureTableNetworkCoverage.highlightIds.removeAll();
+        featureTableRFIsFC.highlightIds.removeAll();
+        featureTableCCTickets.highlightIds.removeAll();
+        featureTableJammerSites.highlightIds.removeAll();
+        featureTableCells.highlightIds.removeAll();
+        featureTableOutagesData.highlightIds.removeAll();
+    
+        const queryParams = {
+          where: `PRODUCT_TYPE = '${value}'`, // Specify your query criteria
+          outFields: ["*"] // Specify the fields you want to retrieve
+        };
+    
+        // Query features
+        const result = await RFIsFC.queryFeatures(queryParams);
+        
+        // Handle the query result
+        result.features.forEach(async(feature) => {
+          // console.log(feature.attributes.original_event_time);
+          const queryParams = {
+            where: `SITEID = '${feature.attributes.cgi}'`, // Specify your query criteria
+            outFields: ["*"] // Specify the fields you want to retrieve
+          };
+          const result = await Cells.queryFeatures(queryParams);
+          result.features.forEach(async(feature) => {
+            const objectId = feature.attributes.OBJECTID;
+            if (!featureTableCells.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCells.highlightIds.add(objectId);
+            } 
+          })
+          
+          // if (candidate) {
+            const objectId = feature.attributes.OBJECTID; // Access objectId directly from feature.attributes
+            if (!featureTableRFIsFC.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableRFIsFC.highlightIds.add(objectId);
+            } 
+        });
+      } catch (error) {
+        console.error("Error querying features:", error);
+      }
+    });
+
+    const SearchInputRFIsSubcategory = document.getElementById("SearchInputRFIsSubcategory");
+    SearchInputRFIsSubcategory.addEventListener("change", async () => {
+      const value = SearchInputRFIsSubcategory.value;
+      console.log(value);
+      // // const layer = map.layers.getItemAt(6);
+      // await RFIsFC.load();
+      // // Create an array of layerViews to be able to highlight selected features.
+      // if (RFIsFC.type === "feature") {
+
+      //   RFIsFC.definitionExpression = value === ""
+      //     ? null
+      //     : `SUBCATEGORY = '${value}'`
+
+      // }
+
+      try {
+        // Clear existing highlights
+        handles.removeAll();
+        featureTableHPSMTickets.highlightIds.removeAll();
+        featureTableSites.highlightIds.removeAll();
+        // featureTableNetworkCoverage.highlightIds.removeAll();
+        featureTableRFIsFC.highlightIds.removeAll();
+        featureTableCCTickets.highlightIds.removeAll();
+        featureTableJammerSites.highlightIds.removeAll();
+        featureTableCells.highlightIds.removeAll();
+        featureTableOutagesData.highlightIds.removeAll();
+    
+        const queryParams = {
+          where: `SUBCATEGORY = '${value}'`, // Specify your query criteria
+          outFields: ["*"] // Specify the fields you want to retrieve
+        };
+    
+        // Query features
+        const result = await RFIsFC.queryFeatures(queryParams);
+        
+        // Handle the query result
+        result.features.forEach(async(feature) => {
+          // console.log(feature.attributes.original_event_time);
+          const queryParams = {
+            where: `SITEID = '${feature.attributes.cgi}'`, // Specify your query criteria
+            outFields: ["*"] // Specify the fields you want to retrieve
+          };
+          const result = await Cells.queryFeatures(queryParams);
+          result.features.forEach(async(feature) => {
+            const objectId = feature.attributes.OBJECTID;
+            if (!featureTableCells.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCells.highlightIds.add(objectId);
+            } 
+          })
+          
+          // if (candidate) {
+            const objectId = feature.attributes.OBJECTID; // Access objectId directly from feature.attributes
+            if (!featureTableRFIsFC.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableRFIsFC.highlightIds.add(objectId);
+            } 
+        });
+      } catch (error) {
+        console.error("Error querying features:", error);
+      }
+
+    });
+
+    const SearchInputRFIsArea = document.getElementById("SearchInputRFIsArea");
+    SearchInputRFIsArea.addEventListener("change", async () => {
+      const value = SearchInputRFIsArea.value;
+      console.log(value);
+      // // const layer = map.layers.getItemAt(6);
+      // await RFIsFC.load();
+      // // Create an array of layerViews to be able to highlight selected features.
+      // if (RFIsFC.type === "feature") {
+
+      //   RFIsFC.definitionExpression = value === ""
+      //     ? null
+      //     : `User_Location = '${value}'`
+
+      // }
+
+      try {
+        // Clear existing highlights
+        handles.removeAll();
+        featureTableHPSMTickets.highlightIds.removeAll();
+        featureTableSites.highlightIds.removeAll();
+        // featureTableNetworkCoverage.highlightIds.removeAll();
+        featureTableRFIsFC.highlightIds.removeAll();
+        featureTableCCTickets.highlightIds.removeAll();
+        featureTableJammerSites.highlightIds.removeAll();
+        featureTableCells.highlightIds.removeAll();
+        featureTableOutagesData.highlightIds.removeAll();
+    
+        const queryParams = {
+          where: `User_Location = '${value}'`, // Specify your query criteria
+          outFields: ["*"] // Specify the fields you want to retrieve
+        };
+    
+        // Query features
+        const result = await RFIsFC.queryFeatures(queryParams);
+        
+        // Handle the query result
+        result.features.forEach(async(feature) => {
+          // console.log(feature.attributes.original_event_time);
+          const queryParams = {
+            where: `SITEID = '${feature.attributes.cgi}'`, // Specify your query criteria
+            outFields: ["*"] // Specify the fields you want to retrieve
+          };
+          const result = await Cells.queryFeatures(queryParams);
+          result.features.forEach(async(feature) => {
+            const objectId = feature.attributes.OBJECTID;
+            if (!featureTableCells.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableCells.highlightIds.add(objectId);
+            } 
+          })
+          
+          // if (candidate) {
+            const objectId = feature.attributes.OBJECTID; // Access objectId directly from feature.attributes
+            if (!featureTableRFIsFC.highlightIds.includes(objectId)) {
+              // Remove feature from current selection if already highlighted
+              featureTableRFIsFC.highlightIds.add(objectId);
+            } 
+        });
+      } catch (error) {
+        console.error("Error querying features:", error);
+      }
+
+
+    });
 
     const SearchInputOutagesAffectedService = document.getElementById("SearchInputOutagesAffectedService");
     SearchInputOutagesAffectedService.addEventListener("change", async () => {
