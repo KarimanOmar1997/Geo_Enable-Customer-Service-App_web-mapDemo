@@ -364,7 +364,7 @@ require([
           type: "relationship",
           // The numeric ID value for the defined relationship on the service.
           // This can be found on the service.
-          relationshipId: 0,
+          relationshipId: 9,
           description: "",
           // Display two related fire features in the list of related features.
           displayCount: 1,
@@ -379,7 +379,7 @@ require([
         // // the units and wildfire protection facility statistics table.
         {
           type: "relationship",
-          relationshipId: 1,
+          relationshipId: 10,
           description: "",
           // Display only the one unit
           displayCount: 1,
